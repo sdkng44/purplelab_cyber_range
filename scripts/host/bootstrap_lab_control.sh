@@ -103,7 +103,7 @@ wait_for_caldera_http() {
     if [ "${code}" = "200" ] || [ "${code}" = "302" ] || [ "${code}" = "405" ]; then
       return 0
     fi
-    sleep 15
+    sleep 10
   done
 
   echo "[bootstrap_lab_control] Caldera HTTP service did not become ready: ${caldera_server}"
