@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-BASE_DIR="/home/labuser/purple-lab"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+BASE_DIR="${BASE_DIR:-$(cd "${SCRIPT_DIR}/../.." && pwd)}"
 WAZUH_DIR="${BASE_DIR}/thirdparty/wazuh-docker/single-node"
 GENERATED_ENV="${BASE_DIR}/generated/caldera.env"
 LOCAL_RULES="${BASE_DIR}/configs/wazuh/local_rules.xml"

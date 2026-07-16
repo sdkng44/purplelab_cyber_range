@@ -22,30 +22,30 @@
             echo "S13_PIVOT_DELIVERY_FAIL target=#{host.pivot.target.name}";
           fi
         timeout: 300
-requirements:
-  - module: plugins.stockpile.app.requirements.paw_provenance
-    relationship_match:
-      - source: host.pivot.target.host
-  - module: plugins.stockpile.app.requirements.basic
-    relationship_match:
-      - source: host.pivot.target.host
-        edge: has_port
-        target: host.pivot.target.port
-  - module: plugins.stockpile.app.requirements.basic
-    relationship_match:
-      - source: host.pivot.target.host
-        edge: has_user
-        target: host.pivot.target.user
-  - module: plugins.stockpile.app.requirements.basic
-    relationship_match:
-      - source: host.pivot.target.user
-        edge: has_password
-        target: host.pivot.target.password
-  - module: plugins.stockpile.app.requirements.basic
-    relationship_match:
-      - source: host.pivot.target.host
-        edge: maps_name
-        target: host.pivot.target.name
+  requirements:
+    - module: plugins.stockpile.app.requirements.paw_provenance
+      relationship_match:
+        - source: host.pivot.target.host
+    - module: plugins.stockpile.app.requirements.basic
+      relationship_match:
+        - source: host.pivot.target.host
+          edge: has_port
+          target: host.pivot.target.port
+    - module: plugins.stockpile.app.requirements.basic
+      relationship_match:
+        - source: host.pivot.target.host
+          edge: has_user
+          target: host.pivot.target.user
+    - module: plugins.stockpile.app.requirements.basic
+      relationship_match:
+        - source: host.pivot.target.user
+          edge: has_password
+          target: host.pivot.target.password
+    - module: plugins.stockpile.app.requirements.basic
+      relationship_match:
+        - source: host.pivot.target.host
+          edge: maps_name
+          target: host.pivot.target.name
   singleton: false
   repeatable: false
   delete_payload: false

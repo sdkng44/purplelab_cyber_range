@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-BASE_DIR="${BASE_DIR:-/home/labuser/purple-lab}"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+BASE_DIR="${BASE_DIR:-$(cd "${SCRIPT_DIR}/../.." && pwd)}"
 ENV_FILE="${ENV_FILE:-${BASE_DIR}/generated/caldera.env}"
 
 if [ -f "${ENV_FILE}" ]; then

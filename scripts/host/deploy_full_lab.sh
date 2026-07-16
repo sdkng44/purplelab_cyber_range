@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-BASE_DIR="/home/labuser/purple-lab"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+BASE_DIR="${BASE_DIR:-$(cd "${SCRIPT_DIR}/../.." && pwd)}"
 
 ENSURE_LAB_CONTROL_SCRIPT="${BASE_DIR}/scripts/host/ensure_lab_control.sh"
 DEPLOY_INT_ENDPOINT_SCRIPT="${BASE_DIR}/scripts/host/deploy_int_endpoint.sh"

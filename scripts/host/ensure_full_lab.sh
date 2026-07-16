@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-BASE_DIR="/home/labuser/purple-lab"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+BASE_DIR="${BASE_DIR:-$(cd "${SCRIPT_DIR}/../.." && pwd)}"
 
 APPLY_LAB_FIREWALL_PHASE1_SCRIPT="${BASE_DIR}/scripts/host/apply_lab_firewall_phase1.sh"
 VALIDATE_SEGMENTATION_PHASE1_SCRIPT="${BASE_DIR}/scripts/host/validate_segmentation_phase1.sh"

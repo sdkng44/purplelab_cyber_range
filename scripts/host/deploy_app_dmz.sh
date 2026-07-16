@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-BASE_DIR="/home/labuser/purple-lab"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+BASE_DIR="${BASE_DIR:-$(cd "${SCRIPT_DIR}/../.." && pwd)}"
 COMPOSE_DIR="${BASE_DIR}/compose"
 GENERATED_ENV="${BASE_DIR}/generated/caldera.env"
 SUPPORT_PRIVKEY="/home/labuser/.ssh/purplelab_support_ed25519"

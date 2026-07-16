@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-BASE_DIR="/home/labuser/purple-lab"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+BASE_DIR="${BASE_DIR:-$(cd "${SCRIPT_DIR}/../.." && pwd)}"
 ENABLE_PURPLELAB_SCRIPT="${BASE_DIR}/scripts/host/enable_caldera_purplelab.sh"
 WAZUH_DIR="${BASE_DIR}/thirdparty/wazuh-docker/single-node"
 CALDERA_DIR="${BASE_DIR}/thirdparty/caldera"
@@ -85,7 +86,7 @@ wait_for_caldera_local_config() {
     if [ -f "${CALDERA_LOCAL_YML}" ]; then
       return 0
     fi
-    sleep 2
+    sleep 10
   done
 
   echo "[bootstrap_lab_control] Caldera local.yml was not created in time: ${CALDERA_LOCAL_YML}"
@@ -102,7 +103,7 @@ wait_for_caldera_http() {
     if [ "${code}" = "200" ] || [ "${code}" = "302" ] || [ "${code}" = "405" ]; then
       return 0
     fi
-    sleep 2
+    sleep 15
   done
 
   echo "[bootstrap_lab_control] Caldera HTTP service did not become ready: ${caldera_server}"

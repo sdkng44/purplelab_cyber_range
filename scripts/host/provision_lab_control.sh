@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-BASE_DIR="/home/labuser/purple-lab"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+BASE_DIR="${BASE_DIR:-$(cd "${SCRIPT_DIR}/../.." && pwd)}"
+
 CALDERA_DIR="${BASE_DIR}/thirdparty/caldera"
 WAZUH_DIR="${BASE_DIR}/thirdparty/wazuh-docker/single-node"
 CALDERA_VENV="${CALDERA_DIR}/.venv"
@@ -50,13 +52,17 @@ install_apt_packages() {
 }
 
 install_docker_stack() {
-  log "Installing Docker packages if needed..."
+  log "Ensuring Docker engine and Compose are available..."
 
-  if ! dpkg -s docker.io >/dev/null 2>&1; then
+  if ! command -v docker >/dev/null 2>&1; then
+    log "Docker not found. Installing docker.io from Ubuntu packages..."
     sudo apt-get install -y docker.io
+  else
+    log "Docker command already present. Skipping Docker engine installation."
   fi
 
   if ! docker compose version >/dev/null 2>&1; then
+    log "Docker Compose plugin not found. Trying to install it..."
     if apt-cache show docker-compose-v2 >/dev/null 2>&1; then
       sudo apt-get install -y docker-compose-v2 || true
     fi
@@ -65,6 +71,8 @@ install_docker_stack() {
         sudo apt-get install -y docker-compose-plugin || true
       fi
     fi
+  else
+    log "Docker Compose already available."
   fi
 
   sudo systemctl enable docker >/dev/null 2>&1 || true
@@ -77,9 +85,7 @@ install_docker_stack() {
 
 prepare_directories() {
   log "Preparing laboratory directories..."
-  mkdir -p "${BASE_DIR}/generated" "${BASE_DIR}/results" "${BASE_DIR}/evidence"
-  mkdir -p "${BASE_DIR}/scripts/host" "${BASE_DIR}/scripts/linux"
-  mkdir -p "${BASE_DIR}/configs" "${BASE_DIR}/thirdparty"
+  mkdir -p "${BASE_DIR}/generated" "${BASE_DIR}/results" "${BASE_DIR}/evidence" "${BASE_DIR}/thirdparty"
 }
 
 setup_thirdparty() {
@@ -88,17 +94,61 @@ setup_thirdparty() {
   bash "${SETUP_THIRDPARTY_SCRIPT}"
 }
 
+ensure_wazuh_indexer_certs() {
+  local single_node_dir="${BASE_DIR}/thirdparty/wazuh-docker/single-node"
+  local certs_dir="${single_node_dir}/config/wazuh_indexer_ssl_certs"
+  local certs_compose="${single_node_dir}/generate-indexer-certs.yml"
+  local certs_yml="${single_node_dir}/config/certs.yml"
+
+  log "Ensuring Wazuh indexer certificates exist..."
+
+  require_path "${single_node_dir}"
+  require_path "${certs_compose}"
+  require_path "${certs_yml}"
+
+  mkdir -p "${certs_dir}"
+
+  find "${certs_dir}" -maxdepth 1 -mindepth 1 -type d \( -name '*.pem' -o -name '*-key.pem' \) -exec rm -rf {} + || true
+
+  if [ -f "${certs_dir}/admin.pem" ] && \
+     [ -f "${certs_dir}/admin-key.pem" ] && \
+     [ -f "${certs_dir}/root-ca.pem" ] && \
+     [ -f "${certs_dir}/wazuh.indexer.pem" ] && \
+     [ -f "${certs_dir}/wazuh.indexer-key.pem" ] && \
+     [ -f "${certs_dir}/wazuh.manager.pem" ] && \
+     [ -f "${certs_dir}/wazuh.manager-key.pem" ] && \
+     [ -f "${certs_dir}/wazuh.dashboard.pem" ] && \
+     [ -f "${certs_dir}/wazuh.dashboard-key.pem" ]; then
+    log "Wazuh certificates already present. Skipping generation."
+    return 0
+  fi
+
+  log "Generating self-signed Wazuh certificates..."
+  (
+    cd "${single_node_dir}"
+    docker compose -f generate-indexer-certs.yml run --rm generator
+  )
+
+  [ -f "${certs_dir}/root-ca.pem" ] || { echo "[provision_lab_control] missing root-ca.pem"; exit 1; }
+  [ -f "${certs_dir}/admin.pem" ] || { echo "[provision_lab_control] missing admin.pem"; exit 1; }
+
+  log "Wazuh certificate generation completed."
+}
+
 prepare_caldera_venv() {
   log "Preparing Caldera Python virtual environment..."
   require_path "${CALDERA_DIR}"
   require_path "${CALDERA_DIR}/requirements.txt"
 
-  if [ ! -d "${CALDERA_VENV}" ]; then
-    python3 -m venv "${CALDERA_VENV}"
+  if [ -d "${CALDERA_VENV}" ]; then
+    rm -rf "${CALDERA_VENV}"
   fi
+
+  python3 -m venv "${CALDERA_VENV}"
 
   "${CALDERA_VENV}/bin/pip" install --upgrade pip setuptools wheel
   "${CALDERA_VENV}/bin/pip" install -r "${CALDERA_DIR}/requirements.txt"
+  "${CALDERA_VENV}/bin/pip" install docker
 }
 
 write_caldera_service() {
@@ -139,6 +189,7 @@ main() {
   install_apt_packages
   install_docker_stack
   setup_thirdparty
+  ensure_wazuh_indexer_certs
   prepare_caldera_venv
   write_caldera_service
 

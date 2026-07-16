@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-CALDERA_DIR="${CALDERA_DIR:-/home/labuser/purple-lab/thirdparty/caldera}"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+BASE_DIR="${BASE_DIR:-$(cd "${SCRIPT_DIR}/../.." && pwd)}"
+CALDERA_DIR="${CALDERA_DIR:-${BASE_DIR}/thirdparty/caldera}"
 LOCAL_YML="${CALDERA_DIR}/conf/local.yml"
 
 log() {
@@ -13,36 +15,22 @@ if [ ! -f "${LOCAL_YML}" ]; then
   exit 1
 fi
 
-if ! grep -Eq '^[[:space:]]*-[[:space:]]*purplelab[[:space:]]*$' "${LOCAL_YML}"; then
-  tmp="$(mktemp)"
-  awk '
-    BEGIN { inserted=0 }
-    {
-      print
-      if ($0 ~ /^plugins:[[:space:]]*$/ && inserted==0) {
-        print "  - purplelab"
-        inserted=1
-      }
-    }
-    END {
-      if (inserted==0) {
-        print ""
-        print "plugins:"
-        print "  - purplelab"
-      }
-    }
-  ' "${LOCAL_YML}" > "${tmp}"
-  mv "${tmp}" "${LOCAL_YML}"
-  log "Added purplelab plugin entry"
-else
-  log "purplelab plugin already present"
-fi
+python3 - "${LOCAL_YML}" <<'PY'
+import sys
+from pathlib import Path
+import yaml
 
-if ! grep -Eq '^objects\.planners\.default:[[:space:]]*atomic[[:space:]]*$' "${LOCAL_YML}"; then
-  if grep -Eq '^objects\.planners\.default:' "${LOCAL_YML}"; then
-    sed -i 's/^objects\.planners\.default:.*/objects.planners.default: atomic/' "${LOCAL_YML}"
-  else
-    printf '\nobjects.planners.default: atomic\n' >> "${LOCAL_YML}"
-  fi
-  log "Ensured atomic planner as default"
-fi
+path = Path(sys.argv[1])
+data = yaml.safe_load(path.read_text()) or {}
+
+plugins = data.get("plugins") or []
+if "purplelab" not in plugins:
+    plugins.append("purplelab")
+data["plugins"] = plugins
+
+data["objects.planners.default"] = "atomic"
+
+path.write_text(yaml.safe_dump(data, sort_keys=False))
+PY
+
+log "purplelab plugin ensured in ${LOCAL_YML}"
