@@ -183,5 +183,9 @@ log "Ensuring lab-control s13 Sandcat service is installed..."
 
 cleanup_legacy_lab_control_sandcats
 
+if [ -x "${BASE_DIR}/scripts/host/print_dashboard_access.sh" ]; then
+  bash "${BASE_DIR}/scripts/host/print_dashboard_access.sh"
+fi
+
 log "Bootstrap completed successfully."
 log "Generated environment file: ${GENERATED_ENV}"

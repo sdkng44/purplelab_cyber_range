@@ -108,6 +108,9 @@ check_no_legacy_lab_control_process "lab-control-s13" "no legacy lab-control s13
 
 echo "=== Validation Summary ==="
 if [ "$FAILURES" -eq 0 ]; then
+  if [ -x "${BASE_DIR}/scripts/host/print_dashboard_access.sh" ]; then
+  bash "${BASE_DIR}/scripts/host/print_dashboard_access.sh"
+  fi
   echo "Validation successful. No failures found."
   exit 0
 fi
