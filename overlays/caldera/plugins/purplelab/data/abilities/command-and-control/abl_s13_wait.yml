@@ -1,0 +1,22 @@
+- id: a1301005-0005-4005-8005-000000000005
+  name: ABL-S13-WAIT
+  description: Wait for new agents to beacon
+  tactic: command-and-control
+  technique:
+    attack_id: T1105
+    name: Ingress Tool Transfer
+  platforms:
+    windows:
+      psh:
+        command: |
+          if (-not ($env:COMPUTERNAME -match '^WIN-ENDPOINT-01$|^WIN-ENDPOINT01$')) { exit 0 }
+          Start-Sleep -Seconds 35
+        timeout: 90
+    linux:
+      sh:
+        command: |
+          sleep 35
+        timeout: 90
+  singleton: false
+  repeatable: false
+  delete_payload: false

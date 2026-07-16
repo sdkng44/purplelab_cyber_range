@@ -1,0 +1,5 @@
+id: 62c9fa90-9b22-4e1f-ac52-aa2fbc102002
+name: ADV-S10-CALDERA-WIN-POWERSHELL-EXECUTION
+description: CALDERA-driven benign PowerShell execution on the Windows endpoint
+atomic_ordering:
+  - 51b8f980-8a11-4d0f-9c41-9a1eab101001

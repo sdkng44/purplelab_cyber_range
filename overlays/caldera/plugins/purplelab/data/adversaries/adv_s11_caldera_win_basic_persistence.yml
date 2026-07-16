@@ -1,0 +1,5 @@
+id: 84eb0bb0-2d22-4f3e-9e82-bb22cc224402
+name: ADV-S11-CALDERA-WIN-BASIC-PERSISTENCE
+description: CALDERA-driven benign Windows scheduled task persistence
+atomic_ordering:
+  - 73dafaa0-1c11-4f2d-9d71-aa11bb113301

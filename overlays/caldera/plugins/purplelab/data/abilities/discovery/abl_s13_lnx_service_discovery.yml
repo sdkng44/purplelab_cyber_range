@@ -1,0 +1,39 @@
+- id: a1301001-0001-4001-8001-000000000001
+  name: ABL-S13-LNX-SERVICE-DISCOVERY
+  description: Fingerprint the candidate pool service and recover the bootstrap hint
+  tactic: discovery
+  technique:
+    attack_id: T1595
+    name: Active Scanning
+  platforms:
+    linux:
+      sh:
+        command: |
+          hostname | grep -qx 'lab-control' || exit 0;
+          INFO="$(curl -fsS http://#{s13.scan.target}:#{s13.scan.port.start}/api/info 2>/dev/null || true)";
+          if [ -z "${INFO}" ]; then echo "S13_SERVICE_FAIL host=#{s13.scan.target} port=#{s13.scan.port.start} reason=empty_info"; exit 0; fi;
+          HINT="$(printf '%s' "${INFO}" | python3 -c 'import sys,json; d=json.load(sys.stdin); print(d.get("bootstrap_hint",""))' 2>/dev/null || true)";
+          NODE="$(printf '%s' "${INFO}" | python3 -c 'import sys,json; d=json.load(sys.stdin); print(d.get("node",""))' 2>/dev/null || true)";
+          SERVICE="$(printf '%s' "${INFO}" | python3 -c 'import sys,json; d=json.load(sys.stdin); print(d.get("service",""))' 2>/dev/null || true)";
+          if [ -z "${HINT}" ]; then echo "S13_SERVICE_FAIL host=#{s13.scan.target} port=#{s13.scan.port.start} reason=missing_hint raw=${INFO}"; exit 0; fi;
+          if [ -z "${NODE}" ]; then echo "S13_SERVICE_FAIL host=#{s13.scan.target} port=#{s13.scan.port.start} reason=missing_node raw=${INFO}"; exit 0; fi;
+          if [ -z "${SERVICE}" ]; then echo "S13_SERVICE_FAIL host=#{s13.scan.target} port=#{s13.scan.port.start} reason=missing_service raw=${INFO}"; exit 0; fi;
+          echo "S13_SERVICE_OK host=#{s13.scan.target} port=#{s13.scan.port.start} service=${SERVICE} node=${NODE} hint=${HINT}";
+        timeout: 180
+        parsers:
+          plugins.purplelab.app.parsers.s13_service:
+            - source: pool.target.host
+              edge: has_open_port
+              target: pool.target.port
+            - source: pool.target.host
+              edge: has_service
+              target: pool.service.name
+            - source: pool.target.host
+              edge: has_hint
+              target: pool.bootstrap.path
+            - source: pool.target.host
+              edge: maps_node
+              target: pool.target.node
+  singleton: false
+  repeatable: false
+  delete_payload: false

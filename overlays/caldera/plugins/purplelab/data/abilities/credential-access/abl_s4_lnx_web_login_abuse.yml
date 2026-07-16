@@ -1,0 +1,16 @@
+- id: a4d1f8b0-6f11-4d3a-9c2f-1e5b8f8a4401
+  name: ABL-S4-LNX-WEB-LOGIN-ABUSE
+  description: Execute controlled repeated failed login attempts against the public web login endpoint
+  tactic: credential-access
+  technique:
+    attack_id: T1110
+    name: Brute Force
+  platforms:
+    linux:
+      sh:
+        command: |
+          bash /home/labuser/purple-lab/scenarios/S4/run_web_login_abuse_s4.sh
+        timeout: 240
+  singleton: false
+  repeatable: false
+  delete_payload: false

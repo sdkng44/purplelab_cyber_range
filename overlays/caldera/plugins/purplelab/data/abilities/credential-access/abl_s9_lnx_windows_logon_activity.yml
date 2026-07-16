@@ -1,0 +1,16 @@
+- id: 2a91b880-6d41-4fab-8c72-9a1deeef1101
+  name: ABL-S9-LNX-WINDOWS-LOGON-ACTIVITY
+  description: Execute controlled failed and successful SMB authentication attempts against a Windows endpoint
+  tactic: credential-access
+  technique:
+    attack_id: T1110
+    name: Brute Force
+  platforms:
+    linux:
+      sh:
+        command: |
+          bash /home/labuser/purple-lab/scenarios/S9/run_windows_logon_activity_s9.sh
+        timeout: 300
+  singleton: false
+  repeatable: false
+  delete_payload: false

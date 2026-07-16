@@ -1,0 +1,5 @@
+id: d5a6f550-0f0e-4df6-a2b7-2aa6b6f55202
+name: ADV-S5-CALDERA-WEB-SQLI-PROBE
+description: CALDERA-driven controlled SQL injection probing against the public-facing application node
+atomic_ordering:
+  - c12f5a20-17aa-4d7d-8c31-5d0d64d55101

@@ -1,0 +1,48 @@
+dn: ou=People,dc=corp,dc=lab
+objectClass: organizationalUnit
+ou: People
+
+dn: ou=Groups,dc=corp,dc=lab
+objectClass: organizationalUnit
+ou: Groups
+
+dn: ou=Printers,dc=corp,dc=lab
+objectClass: organizationalUnit
+ou: Printers
+
+dn: uid=analyst,ou=People,dc=corp,dc=lab
+objectClass: inetOrgPerson
+cn: Lab Analyst
+sn: Analyst
+uid: analyst
+mail: analyst@corp.lab
+userPassword: Analyst123!
+
+dn: uid=ops,ou=People,dc=corp,dc=lab
+objectClass: inetOrgPerson
+cn: Lab Operations
+sn: Operations
+uid: ops
+mail: ops@corp.lab
+userPassword: Ops123456!
+
+dn: cn=engineering,ou=Groups,dc=corp,dc=lab
+objectClass: groupOfNames
+cn: engineering
+member: uid=analyst,ou=People,dc=corp,dc=lab
+
+dn: cn=operations,ou=Groups,dc=corp,dc=lab
+objectClass: groupOfNames
+cn: operations
+member: uid=ops,ou=People,dc=corp,dc=lab
+
+dn: cn=it-admins,ou=Groups,dc=corp,dc=lab
+objectClass: groupOfNames
+cn: it-admins
+member: uid=analyst,ou=People,dc=corp,dc=lab
+member: uid=ops,ou=People,dc=corp,dc=lab
+
+dn: cn=Printer-HQ-01,ou=Printers,dc=corp,dc=lab
+objectClass: device
+cn: Printer-HQ-01
+description: Purple Lab virtual printer entry

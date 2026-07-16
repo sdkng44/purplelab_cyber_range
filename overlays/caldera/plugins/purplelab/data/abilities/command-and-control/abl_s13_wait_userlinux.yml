@@ -1,0 +1,27 @@
+- id: a1301005-0005-4005-8005-000000000205
+  name: ABL-S13-WAIT-USERLINUX-BEACON
+  description: Wait for user-linux-01 beacon after pivot delivery
+  tactic: command-and-control
+  technique:
+    attack_id: T1105
+    name: Ingress Tool Transfer
+  platforms:
+    linux:
+      sh:
+        command: |
+          hostname | grep -Eq '^pool-node-[0-9]+$' || exit 0;
+          echo "S13_WAIT_USERLINUX target=#{host.pivot.target.name}";
+          sleep 35
+        timeout: 90
+requirements:
+  - module: plugins.stockpile.app.requirements.paw_provenance
+    relationship_match:
+      - source: host.pivot.target.host
+  - module: plugins.stockpile.app.requirements.basic
+    relationship_match:
+      - source: host.pivot.target.host
+        edge: maps_name
+        target: host.pivot.target.name
+  singleton: false
+  repeatable: false
+  delete_payload: false

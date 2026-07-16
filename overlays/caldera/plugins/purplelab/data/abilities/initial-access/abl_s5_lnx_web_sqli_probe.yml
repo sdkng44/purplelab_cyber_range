@@ -1,0 +1,16 @@
+- id: c12f5a20-17aa-4d7d-8c31-5d0d64d55101
+  name: ABL-S5-LNX-WEB-SQLI-PROBE
+  description: Execute controlled SQL injection probe requests against the public search endpoint
+  tactic: initial-access
+  technique:
+    attack_id: T1190
+    name: Exploit Public-Facing Application
+  platforms:
+    linux:
+      sh:
+        command: |
+          bash /home/labuser/purple-lab/scenarios/S5/run_sqli_s5.sh
+        timeout: 240
+  singleton: false
+  repeatable: false
+  delete_payload: false

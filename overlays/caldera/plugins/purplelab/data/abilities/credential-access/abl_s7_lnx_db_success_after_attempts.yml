@@ -1,0 +1,16 @@
+- id: 08a7f760-3b21-4e8b-9b61-7d8cb8cc8801
+  name: ABL-S7-LNX-DB-SUCCESS-AFTER-ATTEMPTS
+  description: Execute repeated failed PostgreSQL attempts followed by successful authenticated access and basic queries
+  tactic: credential-access
+  technique:
+    attack_id: T1078
+    name: Valid Accounts
+  platforms:
+    linux:
+      sh:
+        command: |
+          bash /home/labuser/purple-lab/scenarios/S7/run_db_success_after_attempts_s7.sh
+        timeout: 300
+  singleton: false
+  repeatable: false
+  delete_payload: false

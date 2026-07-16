@@ -1,0 +1,23 @@
+- id: a1301008-0008-4008-8008-000000000008
+  name: ABL-S13-WAIT-APPDMZ-BEACON
+  description: Wait for app-dmz-01 foothold agent to beacon
+  tactic: command-and-control
+  technique:
+    attack_id: T1105
+    name: Ingress Tool Transfer
+  platforms:
+    linux:
+      sh:
+        command: |
+          hostname | grep -qx 'lab-control' || exit 0;
+          sleep 35
+        timeout: 90
+  requirements:
+    - module: plugins.stockpile.app.requirements.basic
+      relationship_match:
+        - source: app.compromised.host
+          edge: has_paw
+          target: app.compromised.paw
+  singleton: false
+  repeatable: false
+  delete_payload: false

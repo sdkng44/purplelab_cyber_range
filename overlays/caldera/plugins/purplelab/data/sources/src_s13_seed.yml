@@ -1,0 +1,11 @@
+id: a13000bb-bbbb-4bbb-8bbb-0000000000bb
+name: SRC-S13-SEED
+facts:
+  - trait: s13.scan.target
+    value: 10.10.50.20
+  - trait: s13.scan.port.start
+    value: '8080'
+  - trait: s13.scan.port.end
+    value: '8080'
+  - trait: app.c2.server
+    value: http://192.168.56.10:8888

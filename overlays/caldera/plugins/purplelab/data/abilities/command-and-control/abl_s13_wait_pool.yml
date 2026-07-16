@@ -1,0 +1,23 @@
+- id: a1301005-0005-4005-8005-000000000105
+  name: ABL-S13-WAIT-POOL-BEACON
+  description: Wait for new pool agents to beacon after app-dmz delivery
+  tactic: command-and-control
+  technique:
+    attack_id: T1105
+    name: Ingress Tool Transfer
+  platforms:
+    linux:
+      sh:
+        command: |
+          hostname | grep -qx app-dmz-01 || exit 0;
+          sleep 35
+        timeout: 90
+  requirements:
+    - module: plugins.stockpile.app.requirements.basic
+      relationship_match:
+        - source: pool.compromised.host
+          edge: has_paw
+          target: pool.compromised.paw
+  singleton: false
+  repeatable: false
+  delete_payload: false

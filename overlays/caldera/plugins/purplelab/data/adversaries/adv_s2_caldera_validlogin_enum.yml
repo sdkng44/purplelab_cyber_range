@@ -1,0 +1,6 @@
+id: 7d9b4cf2-5d13-43c7-b5b8-f5f1d29a8303
+name: ADV-S2-CALDERA-VALIDLOGIN-ENUM
+description: CALDERA-driven S2 successful SSH login followed by bounded post-login enumeration
+atomic_ordering:
+  - 5b1ef8f4-09cd-4e6f-8a2d-10b6f0fca201
+  - 6c2d8f90-91d0-4ec1-bf70-5ed2d6fe9202

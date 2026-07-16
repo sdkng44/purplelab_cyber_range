@@ -1,0 +1,28 @@
+- id: 73dafaa0-1c11-4f2d-9d71-aa11bb113301
+  name: ABL-S11-WIN-BASIC-PERSISTENCE
+  description: Create a benign Windows scheduled task persistence mechanism and trigger it once
+  tactic: persistence
+  technique:
+    attack_id: T1053.005
+    name: Scheduled Task
+  platforms:
+    windows:
+      psh:
+        command: |
+          $TaskName = 'PurpleLab-S11-BasicPersistence';
+          $Script = "New-Item -ItemType Directory -Path 'C:\PurpleLab' -Force | Out-Null; 'S11 persistence trigger ' + (Get-Date -Format o) | Out-File 'C:\PurpleLab\s11_persistence_trigger.txt' -Append";
+          $Encoded = [Convert]::ToBase64String([Text.Encoding]::Unicode.GetBytes($Script));
+          Unregister-ScheduledTask -TaskName $TaskName -Confirm:$false -ErrorAction SilentlyContinue;
+          $Action = New-ScheduledTaskAction -Execute 'powershell.exe' -Argument "-NoProfile -ExecutionPolicy Bypass -EncodedCommand $Encoded";
+          $Trigger = New-ScheduledTaskTrigger -AtStartup;
+          $Principal = New-ScheduledTaskPrincipal -UserId 'SYSTEM' -RunLevel Highest;
+          Register-ScheduledTask -TaskName $TaskName -Action $Action -Trigger $Trigger -Principal $Principal -Force;
+          Start-ScheduledTask -TaskName $TaskName;
+          Start-Sleep -Seconds 5;
+          Get-Content 'C:\PurpleLab\s11_persistence_trigger.txt' | Select-Object -Last 5
+        timeout: 300
+        uploads:
+          - C:\PurpleLab\s11_persistence_trigger.txt
+  singleton: false
+  repeatable: false
+  delete_payload: false

@@ -1,0 +1,22 @@
+- id: a1301000-0000-4000-8000-000000000000
+  name: ABL-S13-LNX-PORTSCAN-SEED
+  description: Discover candidate open ports for the pool on the lab host
+  tactic: discovery
+  technique:
+    attack_id: T1595
+    name: Active Scanning
+  platforms:
+    linux:
+      sh:
+        command: |
+          hostname | grep -qx 'lab-control' || exit 0;
+          nmap -Pn -p #{s13.scan.port.start}-#{s13.scan.port.end} --open #{s13.scan.target} -oG - | awk '/Ports:/{split($0,a,"Ports: "); n=split(a[2],p,", "); for(i=1;i<=n;i++){split(p[i],f,"/"); if(f[2]=="open") printf("S13_PORT_OPEN host=%s port=%s\n",$2,f[1]);}}'
+        timeout: 180
+        parsers:
+          plugins.purplelab.app.parsers.s13_portscan:
+            - source: pool.target.host
+              edge: has_open_port
+              target: pool.target.port
+  singleton: false
+  repeatable: false
+  delete_payload: false

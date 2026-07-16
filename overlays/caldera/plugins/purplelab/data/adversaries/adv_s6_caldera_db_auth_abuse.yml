@@ -1,0 +1,5 @@
+id: f18f4f70-0f2d-4e5f-b2a1-5c98d9bb7702
+name: ADV-S6-CALDERA-DB-AUTH-ABUSE
+description: CALDERA-driven controlled PostgreSQL authentication abuse
+atomic_ordering:
+  - e17f7c90-4f80-4a6f-9c11-5b4d92aa6601

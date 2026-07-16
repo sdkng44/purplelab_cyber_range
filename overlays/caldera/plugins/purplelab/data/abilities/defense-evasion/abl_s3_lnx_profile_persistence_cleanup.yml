@@ -1,0 +1,19 @@
+- id: 92c5a4b3-0d7d-4e0e-8e1f-4a7a09e2d303
+  name: ABL-S3-LNX-PROFILE-PERSISTENCE-CLEANUP
+  description: Remove the benign persistence marker created for S3
+  tactic: defense-evasion
+  technique:
+    attack_id: T1070.004
+    name: File Deletion
+  platforms:
+    linux:
+      sh:
+        command: >
+          rm -f /etc/profile.d/s3_persistence_marker.sh;
+          rm -f /var/tmp/purple-lab/s3_profile_trigger.log;
+          rmdir /var/tmp/purple-lab 2>/dev/null || true;
+          echo 'S3 persistence cleanup completed'
+        timeout: 120
+  singleton: false
+  repeatable: false
+  delete_payload: false

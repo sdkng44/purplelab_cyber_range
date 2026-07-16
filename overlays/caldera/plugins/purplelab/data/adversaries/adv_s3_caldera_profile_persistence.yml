@@ -1,0 +1,7 @@
+id: 99d6b6f5-7e67-4f0b-8ed8-7f0fc3fce302
+name: ADV-S3-CALDERA-PROFILE-PERSISTENCE
+description: CALDERA-driven benign Linux persistence through /etc/profile.d with delayed cleanup
+atomic_ordering:
+  - 81d6a67c-3b38-4d42-9d57-0d1de8d9b301
+  - 3c4bc0a4-8e55-4c1c-a8f1-6dd8fd15c302
+  - 92c5a4b3-0d7d-4e0e-8e1f-4a7a09e2d303

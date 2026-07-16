@@ -1,0 +1,18 @@
+- id: 3c4bc0a4-8e55-4c1c-a8f1-6dd8fd15c302
+  name: ABL-S3-LNX-WAIT-FORENSICS
+  description: Wait before cleanup to allow detection and evidence collection
+  tactic: command-and-control
+  technique:
+    attack_id: T1105
+    name: Ingress Tool Transfer
+  platforms:
+    linux:
+      sh:
+        command: >
+          echo 'S3 forensic wait started';
+          sleep 120;
+          echo 'S3 forensic wait completed'
+        timeout: 150
+  singleton: false
+  repeatable: false
+  delete_payload: false

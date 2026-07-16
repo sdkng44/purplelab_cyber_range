@@ -1,0 +1,25 @@
+- id: 81d6a67c-3b38-4d42-9d57-0d1de8d9b301
+  name: ABL-S3-LNX-PROFILE-PERSISTENCE
+  description: Create a benign persistence marker through /etc/profile.d and trigger it once
+  tactic: persistence
+  technique:
+    attack_id: T1546.004
+    name: Unix Shell Configuration Modification
+  platforms:
+    linux:
+      sh:
+        command: >
+          mkdir -p /var/tmp/purple-lab;
+          chown analyst:analyst /var/tmp/purple-lab;
+          chmod 755 /var/tmp/purple-lab;
+          printf '%s\n' '#!/usr/bin/env bash'
+          'echo "S3_PROFILE_TRIGGER $(date -Iseconds) user=$(id -un) host=$(hostname)" >> /var/tmp/purple-lab/s3_profile_trigger.log 2>/dev/null'
+          'logger -t s3-persistence "S3 profile persistence executed user=$(id -un) host=$(hostname)"'
+          > /etc/profile.d/s3_persistence_marker.sh;
+          chmod 644 /etc/profile.d/s3_persistence_marker.sh;
+          su - analyst -c 'true' || true;
+          echo 'S3 persistence installed and triggered'
+        timeout: 180
+  singleton: false
+  repeatable: false
+  delete_payload: false

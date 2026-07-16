@@ -1,0 +1,16 @@
+- id: 6c2d8f90-91d0-4ec1-bf70-5ed2d6fe9202
+  name: ABL-S2-LNX-SSH-POSTLOGIN-ENUM
+  description: Execute bounded post-login enumeration on int-endpoint-01 through SSH
+  tactic: discovery
+  technique:
+    attack_id: T1082
+    name: System Information Discovery
+  platforms:
+    linux:
+      sh:
+        command: |
+          bash /home/labuser/purple-lab/scenarios/S2/run_ssh_enum_s2.sh
+        timeout: 180
+  singleton: false
+  repeatable: false
+  delete_payload: false

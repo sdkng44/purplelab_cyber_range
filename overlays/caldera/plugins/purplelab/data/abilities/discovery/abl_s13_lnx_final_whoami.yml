@@ -1,0 +1,34 @@
+- id: a1301006-0006-4006-8006-000000000006
+  name: ABL-S13-LNX-FINAL-WHOAMI
+  description: Final post-compromise identity commands on delivered Linux agents
+  tactic: discovery
+  technique:
+    attack_id: T1033
+    name: System Owner/User Discovery
+  platforms:
+    linux:
+      sh:
+        command: |
+          EXPECTED_HOST='#{host.pivot.target.name}';
+          hostname | grep -qx "${EXPECTED_HOST}" || exit 0;
+          mkdir -p /var/tmp/purple-lab;
+          USERNAME="$(whoami)";
+          HOSTNAME="$(hostname)";
+          { echo "S13_FINAL_OK host=${HOSTNAME} user=${USERNAME}"; id; } | tee /var/tmp/purple-lab/s13_final_whoami.txt
+        timeout: 180
+        uploads:
+          - /var/tmp/purple-lab/s13_final_whoami.txt
+        parsers:
+          plugins.purplelab.app.parsers.s13_final:
+            - source: s13.compromised.host
+              edge: has_user
+              target: local.user.name
+  requirements:
+    - module: plugins.stockpile.app.requirements.basic
+      relationship_match:
+        - source: host.pivot.target.host
+          edge: maps_name
+          target: host.pivot.target.name
+  singleton: false
+  repeatable: false
+  delete_payload: false

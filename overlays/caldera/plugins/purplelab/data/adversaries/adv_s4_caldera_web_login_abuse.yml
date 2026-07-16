@@ -1,0 +1,5 @@
+id: b52d38e1-7f43-4bb5-8b7f-cf0b3d9d4402
+name: ADV-S4-CALDERA-WEB-LOGIN-ABUSE
+description: CALDERA-driven controlled web login abuse against the public-facing application node
+atomic_ordering:
+  - a4d1f8b0-6f11-4d3a-9c2f-1e5b8f8a4401

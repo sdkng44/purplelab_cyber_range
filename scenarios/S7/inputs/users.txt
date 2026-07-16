@@ -1,0 +1,3 @@
+dbanalyst
+postgres
+testuser

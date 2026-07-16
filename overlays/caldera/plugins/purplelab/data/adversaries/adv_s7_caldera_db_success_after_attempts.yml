@@ -1,0 +1,5 @@
+id: 19b8f870-4c32-4f9c-ab72-8e9dccdd9902
+name: ADV-S7-CALDERA-DB-SUCCESS-AFTER-ATTEMPTS
+description: CALDERA-driven repeated failed PostgreSQL attempts followed by successful access and basic queries
+atomic_ordering:
+  - 08a7f760-3b21-4e8b-9b61-7d8cb8cc8801

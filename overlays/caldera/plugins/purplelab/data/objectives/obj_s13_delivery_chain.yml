@@ -1,0 +1,16 @@
+id: a13000aa-aaaa-4aaa-8aaa-0000000000aa
+name: OBJ-S13-DELIVERY-CHAIN
+description: Discovery of the pool, delivery to pool nodes, pivot clue discovery, and final instrumentation of user-linux-01
+goals:
+  - count: 1
+    operator: '*'
+    target: pool.target.node
+    value: 'N/A'
+  - count: 1
+    operator: '=='
+    target: host.pivot.target.name
+    value: 'user-linux-01'
+  - count: 1
+    operator: '=='
+    target: s13.compromised.host
+    value: 'user-linux-01'

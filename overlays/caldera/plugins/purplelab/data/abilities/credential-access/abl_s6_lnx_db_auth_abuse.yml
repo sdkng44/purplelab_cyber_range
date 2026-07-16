@@ -1,0 +1,16 @@
+- id: e17f7c90-4f80-4a6f-9c11-5b4d92aa6601
+  name: ABL-S6-LNX-DB-AUTH-ABUSE
+  description: Execute controlled repeated failed PostgreSQL authentication attempts
+  tactic: credential-access
+  technique:
+    attack_id: T1110
+    name: Brute Force
+  platforms:
+    linux:
+      sh:
+        command: |
+          bash /home/labuser/purple-lab/scenarios/S6/run_db_auth_abuse_s6.sh
+        timeout: 240
+  singleton: false
+  repeatable: false
+  delete_payload: false

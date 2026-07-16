@@ -1,0 +1,197 @@
+services:
+  int-endpoint-01:
+    build:
+      context: ../configs/int-endpoint-01
+    container_name: int-endpoint-01
+    hostname: int-endpoint-01
+    restart: unless-stopped
+    env_file:
+      - ../generated/caldera.env
+    environment:
+      SANDCAT_GROUP: red
+    ports:
+      - "192.168.56.10:2223:22"
+    networks:
+      user_net:
+        ipv4_address: 10.10.40.10
+      core_net:
+        ipv4_address: 10.10.50.10
+    dns:
+      - 10.10.50.50
+    dns_search:
+      - corp.lab
+
+  app-dmz-01:
+    build:
+      context: ../configs/app-dmz-01
+    container_name: app-dmz-01
+    hostname: app-dmz-01
+    restart: unless-stopped
+    ports:
+      - "192.168.56.10:8080:8080"
+      - "192.168.56.10:2224:22"
+    environment:
+      WEBAPP_USER: webanalyst
+      WEBAPP_PASS: WebAnalyst123!
+      CALDERA_URL: ${CALDERA_URL}
+      PURPLE_SUPPORT_PATH: ${PURPLE_SUPPORT_PATH}
+      SUPPORT_SSH_USER: ${SUPPORT_SSH_USER}
+      SUPPORT_SSH_KEY: ${SUPPORT_SSH_KEY}
+      PURPLE_POOL_GROUP: ${PURPLE_POOL_GROUP}
+    volumes:
+      - /home/labuser/.ssh/purplelab_support_ed25519:/opt/purple-web/.ssh/purplelab_support_ed25519:ro
+    networks:
+      dmz_net:
+        ipv4_address: 10.10.10.20
+      core_net:
+        ipv4_address: 10.10.50.20
+      data_net:
+        ipv4_address: 10.10.30.20
+    dns:
+      - 10.10.50.50
+    dns_search:
+      - corp.lab
+
+  db-int-01:
+    build:
+      context: ../configs/db-int-01
+    container_name: db-int-01
+    hostname: db-int-01
+    restart: unless-stopped
+    ports:
+      - "192.168.56.10:15432:5432"
+      - "192.168.56.10:2225:22"
+    networks:
+      data_net:
+        ipv4_address: 10.10.30.30
+      core_net:
+        ipv4_address: 10.10.50.30
+    dns:
+      - 10.10.50.50
+    dns_search:
+      - corp.lab
+
+  user-linux-01:
+    build:
+      context: ../configs/user-linux-01
+    container_name: user-linux-01
+    hostname: user-linux-01
+    restart: unless-stopped
+    ports:
+      - "192.168.56.10:2226:22"
+    networks:
+      user_net:
+        ipv4_address: 10.10.40.40
+      core_net:
+        ipv4_address: 10.10.50.40
+    dns:
+      - 10.10.50.50
+    dns_search:
+      - corp.lab
+
+  dns-int-01:
+    build:
+      context: ../configs/dns-int-01
+    container_name: dns-int-01
+    hostname: dns-int-01
+    restart: unless-stopped
+    ports:
+      - "192.168.56.10:53:53/tcp"
+      - "192.168.56.10:53:53/udp"
+      - "192.168.56.10:2227:22"
+    networks:
+      core_net:
+        ipv4_address: 10.10.50.50
+
+  files-int-01:
+    build:
+      context: ../configs/files-int-01
+    container_name: files-int-01
+    hostname: files-int-01
+    restart: unless-stopped
+    ports:
+      - "192.168.56.10:445:445"
+      - "192.168.56.10:2228:22"
+    networks:
+      core_net:
+        ipv4_address: 10.10.50.60
+    dns:
+      - 10.10.50.50
+    dns_search:
+      - corp.lab
+
+  proxy-int-01:
+    build:
+      context: ../configs/proxy-int-01
+    container_name: proxy-int-01
+    hostname: proxy-int-01
+    restart: unless-stopped
+    ports:
+      - "192.168.56.10:3128:3128"
+      - "192.168.56.10:2229:22"
+    networks:
+      core_net:
+        ipv4_address: 10.10.50.70
+    dns:
+      - 10.10.50.50
+    dns_search:
+      - corp.lab
+
+  ldap-int-01:
+    build:
+      context: ../configs/ldap-int-01
+    container_name: ldap-int-01
+    hostname: ldap-int-01
+    restart: unless-stopped
+    ports:
+      - "192.168.56.10:389:389"
+      - "192.168.56.10:2230:22"
+    networks:
+      core_net:
+        ipv4_address: 10.10.50.80
+    dns:
+      - 10.10.50.50
+    dns_search:
+      - corp.lab
+
+  print-int-01:
+    build:
+      context: ../configs/print-int-01
+    container_name: print-int-01
+    hostname: print-int-01
+    restart: unless-stopped
+    ports:
+      - "192.168.56.10:631:631"
+      - "192.168.56.10:2234:22"
+    networks:
+      core_net:
+        ipv4_address: 10.10.50.90
+    dns:
+      - 10.10.50.50
+    dns_search:
+      - corp.lab
+
+networks:
+  dmz_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.10.10.0/24
+
+  data_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.10.30.0/24
+
+  user_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.10.40.0/24
+
+  core_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.10.50.0/24

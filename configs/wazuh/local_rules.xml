@@ -1,0 +1,116 @@
+<group name="local,purple_lab,persistence,">
+  <rule id="100201" level="8">
+    <program_name>^s3-persistence$</program_name>
+    <match>S3 profile persistence executed</match>
+    <description>Purple Lab S3: benign profile persistence marker executed</description>
+    <group>syslog,persistence,attack,T1546.004,</group>
+    <mitre>
+      <id>T1546.004</id>
+    </mitre>
+  </rule>
+</group>
+
+<group name="local,purple_lab,syscheck,persistence,">
+  <rule id="100202" level="10">
+    <if_group>syscheck</if_group>
+    <field name="file">^/etc/profile\.d/s3_persistence_marker\.sh$</field>
+    <description>Purple Lab S3: persistence file created or modified in /etc/profile.d</description>
+    <group>syscheck,persistence,attack,T1546.004,</group>
+    <mitre>
+      <id>T1546.004</id>
+    </mitre>
+  </rule>
+</group>
+
+<group name="local,purple_lab,web,authentication,">
+  <rule id="100301" level="10" frequency="6" timeframe="60">
+    <if_matched_sid>31101</if_matched_sid>
+    <url>^/login$</url>
+    <id>^401$</id>
+    <same_srcip />
+    <description>Purple Lab S4: multiple failed web login attempts against /login from same source IP</description>
+    <group>web,authentication_failed,attack,T1110,</group>
+    <mitre>
+      <id>T1110</id>
+    </mitre>
+  </rule>
+</group>
+
+<group name="local,purple_lab,web,sqli,">
+  <rule id="100401" level="10">
+    <decoded_as>json</decoded_as>
+    <field name="event">^search_request$</field>
+    <field name="query" type="pcre2">(?i)(union(\+|%20|\s)+select|or(\+|%20|\s)+1=1|or(\+|%20|\s)+['"]?1['"]?=['"]?1|sleep\(|information_schema|--|%27)</field>
+    <description>Purple Lab S5: potential SQL injection pattern detected in /search query</description>
+    <group>web,attack,sqli,T1190,</group>
+    <mitre>
+      <id>T1190</id>
+    </mitre>
+  </rule>
+</group>
+
+<group name="local,purple_lab,database,authentication,">
+  <rule id="100501" level="6">
+    <program_name>^postgres$</program_name>
+    <match>password authentication failed for user</match>
+    <description>Purple Lab S6: PostgreSQL authentication failure detected</description>
+    <group>database,authentication_failed,attack,T1110,</group>
+    <mitre>
+      <id>T1110</id>
+    </mitre>
+  </rule>
+
+  <rule id="100502" level="10" frequency="6" timeframe="60">
+    <if_matched_sid>100501</if_matched_sid>
+    <description>Purple Lab S6: multiple failed PostgreSQL authentication attempts detected</description>
+    <group>database,authentication_failed,attack,T1110,</group>
+    <mitre>
+      <id>T1110</id>
+    </mitre>
+  </rule>
+</group>
+
+<group name="local,purple_lab,database,successful_access,">
+  <rule id="100511" level="6">
+    <program_name>^postgres$</program_name>
+    <match>connection authorized:</match>
+    <description>Purple Lab S7: PostgreSQL successful authenticated access detected</description>
+    <group>database,authentication_success,attack,T1078,</group>
+    <mitre>
+      <id>T1078</id>
+    </mitre>
+  </rule>
+
+  <rule id="100512" level="5">
+    <program_name>^postgres$</program_name>
+    <match>statement:</match>
+    <description>Purple Lab S7: PostgreSQL query execution detected</description>
+    <group>database,query_activity,attack,T1078,</group>
+    <mitre>
+      <id>T1078</id>
+    </mitre>
+  </rule>
+
+  <rule id="100513" level="10" timeframe="180">
+    <if_matched_sid>100501</if_matched_sid>
+    <if_matched_sid>100511</if_matched_sid>
+    <description>Purple Lab S7: successful PostgreSQL access observed after recent failed attempts</description>
+    <group>database,authentication_success,attack,T1078,T1110,</group>
+    <mitre>
+      <id>T1078</id>
+      <id>T1110</id>
+    </mitre>
+  </rule>
+</group>
+
+<group name="local,purple_lab,windows,persistence,">
+  <rule id="100701" level="8">
+    <if_group>windows</if_group>
+    <match>PurpleLab-S11-BasicPersistence</match>
+    <description>Purple Lab S11: Windows basic persistence scheduled task observed</description>
+    <group>windows,persistence,attack,T1053.005,</group>
+    <mitre>
+      <id>T1053.005</id>
+    </mitre>
+  </rule>
+</group>

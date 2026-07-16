@@ -1,0 +1,5 @@
+id: 3ba2c990-7e52-4abc-9d83-aa2effff2202
+name: ADV-S9-CALDERA-WINDOWS-LOGON-ACTIVITY
+description: CALDERA-driven failed and successful SMB authentication attempts against a Windows endpoint
+atomic_ordering:
+  - 2a91b880-6d41-4fab-8c72-9a1deeef1101
