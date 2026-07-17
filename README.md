@@ -160,6 +160,42 @@ The CALDERA password is generated locally during bootstrap and should be read fr
 ```bash
 thirdparty/caldera/conf/local.yml
 ```
+The Linux bootstrap and validation helpers can also print the dashboard access information after deployment.
+
+## Optional distribution artifacts
+
+The Git repository is the primary reproducible artifact and should be treated as the source of truth for rebuilding the laboratory from scratch.
+
+An OVA export of the validated `lab-control` VM may also be distributed as a convenience artifact for individuals who prefer importing a prebuilt control-plane image instead of reconstructing the environment from code.
+
+Recommended use of the OVA:
+
+- import the OVA into VirtualBox
+- start the imported VM with the expected host-only adapter
+- verify dashboard access
+- run the Linux-side validators again
+
+Suggested validation after importing the OVA:
+
+```bash
+cd scripts/host
+./validate_lab_control.sh
+./validate_full_lab.sh
+```
+
+## Validated baseline status
+
+The baseline repository and the exported `lab-control` OVA were validated against the expected control-plane and segmented-lab checks.
+
+A baseline should only be considered ready when the following succeed:
+
+```bash
+cd scripts/host
+./validate_lab_control.sh
+./validate_full_lab.sh
+```
+
+Passing validation confirms service reachability, agent presence, network segmentation expectations, and core laboratory dependencies. It does not imply that every scenario is fully detected by default; scenario execution and detection coverage remain separate evaluation outcomes.
 
 ## Upstream dependencies
 
