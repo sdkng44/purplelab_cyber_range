@@ -15,6 +15,31 @@ PurpleLab Cyber Range is a reproducible, locally deployable environment for auth
 - Linux and Windows bootstrap, validation, recovery, and `ensure` workflows.
 - Isolated detection tests and multistage scenarios such as S13.
 
+## Quick access: optional OVA distribution
+
+The Git repository remains the primary reproducible artifact and should be treated as the source of truth for rebuilding the laboratory from scratch.
+
+For individuals who prefer importing a prebuilt control-plane image, an optional OVA export of the validated `lab-control` VM is also available as a convenience artifact for individuals who prefer importing a prebuilt image instead of reconstructing the environment from code.
+
+- OVA download: [Mega folder](https://mega.nz/folder/ntEFnTxY#HNxc5cVVn-EBb5vZRcBl9w)
+- Platform: VirtualBox
+- Purpose: convenience artifact for faster evaluation of the validated baseline
+
+Recommended use of the OVA:
+
+1. Import the OVA into VirtualBox.
+2. Start the imported VM with the expected host-only adapter.
+3. Verify dashboard access.
+4. Run the Linux-side validators again.
+
+Suggested validation after importing the OVA:
+
+```bash
+cd scripts/host
+./validate_lab_control.sh
+./validate_full_lab.sh
+```
+
 ## Scope
 
 This repository contains:
@@ -79,7 +104,7 @@ Recommended baseline:
 
 Review the configured host-only addresses before deployment if your environment does not use `192.168.56.0/24`.
 
-## Provisioning
+## Provisioning without OVA
 
 ### Linux control VM and container lab
 
@@ -162,26 +187,6 @@ thirdparty/caldera/conf/local.yml
 ```
 The Linux bootstrap and validation helpers can also print the dashboard access information after deployment.
 
-## Optional distribution artifacts
-
-The Git repository is the primary reproducible artifact and should be treated as the source of truth for rebuilding the laboratory from scratch.
-
-An OVA export of the validated `lab-control` VM may also be distributed as a convenience artifact for individuals who prefer importing a prebuilt control-plane image instead of reconstructing the environment from code.
-
-Recommended use of the OVA:
-
-- import the OVA into VirtualBox
-- start the imported VM with the expected host-only adapter
-- verify dashboard access
-- run the Linux-side validators again
-
-Suggested validation after importing the OVA:
-
-```bash
-cd scripts/host
-./validate_lab_control.sh
-./validate_full_lab.sh
-```
 
 ## Validated baseline status
 
