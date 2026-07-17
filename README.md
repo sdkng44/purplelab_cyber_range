@@ -38,7 +38,7 @@ The baseline contains two virtual machines and twelve Linux containers:
 | Management | `lab-control`, `win-endpoint-01` |
 | DMZ | `app-dmz-01` |
 | DATA | `app-dmz-01` data interface, `db-int-01` |
-| USER | `int-endpoint-01`, `user-linux-01`, `pool-node-01..03` |
+| USER | `int-endpoint-01`, `user-linux-01`, `pool-node-01..n` |
 | CORE | `dns-int-01`, `files-int-01`, `proxy-int-01`, `ldap-int-01`, `print-int-01`, node core interfaces |
 
 Network domains:
