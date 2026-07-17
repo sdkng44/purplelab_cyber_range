@@ -138,6 +138,29 @@ The following are created locally and should normally remain outside version con
 - Third-party repository working trees.
 - Container volumes, caches, logs, and temporary files.
 
+## Access after deployment
+
+After a successful bootstrap and validation, the main dashboards are available on the `lab-control` host-only address.
+
+### Wazuh Dashboard
+
+- URL: `https://192.168.56.10`
+- User: `admin`
+- Password: `SecretPassword`
+
+The Wazuh dashboard uses a self-signed certificate in the default laboratory deployment, so the browser may display a certificate warning on first access.
+
+### MITRE CALDERA
+
+- URL: `http://192.168.56.10:8888`
+- User: `red`
+
+The CALDERA password is generated locally during bootstrap and should be read from:
+
+```bash
+thirdparty/caldera/conf/local.yml
+```
+
 ## Upstream dependencies
 
 MITRE CALDERA and Wazuh Docker remain separate upstream projects and retain their respective licenses. PurpleLab applies its own configuration, automation, scenarios, and plugin overlay after the pinned revisions are cloned.
