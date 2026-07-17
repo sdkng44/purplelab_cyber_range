@@ -148,7 +148,7 @@ Consider maintaining a `THIRD_PARTY_NOTICES.md` file with the pinned revision an
 
 ## Research artifact
 
-This repository accompanies the manuscript *A Reproducible Purple Team Laboratory for Validating Detections Across Heterogeneous Attack Surfaces*. Formal author and citation metadata can be added to `CITATION.cff` after the anonymous review stage.
+This repository accompanies the manuscript *A Reproducible Purple Team Laboratory for Validating Detections Across Heterogeneous Attack Surfaces*.
 
 ## License
 
