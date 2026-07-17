@@ -15,6 +15,14 @@ PurpleLab Cyber Range is a reproducible, locally deployable environment for auth
 - Linux and Windows bootstrap, validation, recovery, and `ensure` workflows.
 - Isolated detection tests and multistage scenarios such as S13.
 
+## Start here
+
+- Rebuild the laboratory from source: [Provisioning without OVA](#provisioning-without-ova).
+- Import the prebuilt control plane: [Optional OVA distribution](#quick-access-optional-ova-distribution).
+- Start, stop, access, validate, and use the environment: [Operations guide](docs/OPERATIONS.md).
+- Look up node addresses, ports, accounts, services, logs, and configuration files: [Node and service reference](docs/NODE_REFERENCE.md).
+
+
 ## Quick access: optional OVA distribution
 
 The Git repository remains the primary reproducible artifact and should be treated as the source of truth for rebuilding the laboratory from scratch.
