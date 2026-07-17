@@ -2,8 +2,6 @@
 
 PurpleLab Cyber Range is a reproducible, locally deployable environment for authorized adversary emulation, detection validation, and security-monitoring exercises. It combines a segmented Docker-based enterprise lab, MITRE CALDERA for emulation and orchestration, and Wazuh for centralized telemetry collection and alerting.
 
-> **Responsible use:** PurpleLab is intended only for controlled laboratory environments and systems where the operator has explicit authorization.
-
 ![PurpleLab architecture](docs/images/purplelab-architecture.svg)
 
 ## Key capabilities
