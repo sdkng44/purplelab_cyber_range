@@ -57,7 +57,7 @@ Some container SSH configurations permit root login, but the project does not pr
 | LDAP user | `uid=analyst,ou=People,dc=corp,dc=lab` | `Analyst123!` | Seeded directory identity |
 | LDAP user | `uid=ops,ou=People,dc=corp,dc=lab` | `Ops123456!` | Seeded directory identity |
 | Windows local user | `labuser` | `WinPassword123!` | Created by the Windows bootstrap |
-| SMB share | `analyst` / `ops` | Same as the corresponding Linux account | `CorpShare` |
+| SMB share | `analyst` / `ops` | Same as the corresponding Linux LDAP user account | `CorpShare` |
 
 The Wazuh password is the default password. The CALDERA password is generated during installation.
 
