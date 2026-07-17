@@ -1,6 +1,6 @@
 # PurpleLab Node and Service Reference
 
-This document is the technical inventory for the default PurpleLab baseline. All listed passwords are synthetic laboratory defaults already represented in repository code. Do not reuse them, expose the published ports to an untrusted network, or use these accounts outside the isolated lab.
+This document is the technical inventory for the default PurpleLab baseline.
 
 ## Node access inventory
 
@@ -27,8 +27,6 @@ For pool node index `i`, the current deployment script derives:
 - CORE IP: `10.10.50.(100+i)`
 - SSH host port: `2230+i`
 - local service host port: `2300+i`
-
-The default three-node pool avoids the SSH port `2234` assigned to `print-int-01`. Change the allocation before deploying a fourth pool node.
 
 ## SSH accounts
 
@@ -61,7 +59,7 @@ Some container SSH configurations permit root login, but the project does not pr
 | Windows local user | `labuser` | `WinPassword123!` | Created by the Windows bootstrap |
 | SMB share | `analyst` / `ops` | Same as the corresponding Linux account | `CorpShare` |
 
-The Wazuh credential is an upstream single-node laboratory default. The CALDERA credential is deliberately generated rather than stored in Git.
+The Wazuh password is the default password. The CALDERA password is generated during installation.
 
 ## DNS zone
 
@@ -118,7 +116,7 @@ The first three are ingested as syslog-like input and `app.json` is ingested as 
 - Query, connection, and disconnection logging are enabled for laboratory observability.
 - Main log: `/var/log/postgresql/postgresql.log`.
 
-The database and role are created in `configs/db-int-01/entrypoint.sh`. PostgreSQL configuration is applied to the Ubuntu package-managed cluster during container startup.
+The database and role are created in `configs/db-int-01/entrypoint.sh`. PostgreSQL configuration is applied during container startup.
 
 ## SMB file service
 
@@ -166,7 +164,7 @@ dc=corp,dc=lab
 
 Seed file: `configs/ldap-int-01/bootstrap.ldif`. Bootstrap logic and the administrative password are in `configs/ldap-int-01/entrypoint.sh`.
 
-The seed is applied only when the container's LDAP state is uninitialized. Recreate the node through `scripts/host/deploy_ldap_int.sh` after changing the baseline LDIF.
+The seed is applied only when the container's LDAP state is uninitialized. Recreate the node through `scripts/host/deploy_ldap_int.sh` after changing the baseline LDIF file.
 
 ## CUPS printing
 
@@ -210,7 +208,7 @@ Pool nodes are created dynamically by `scripts/host/deploy_pool_nodes.sh`, not b
 - Auth, syslog, and local-service telemetry.
 - A small HTTP service on internal port `8081` used by controlled scenario orchestration.
 
-The default S13 fixture places one synthetic operational clue on `pool-node-02`. Redeploying the pool recreates that fixture. Treat it as scenario data, not as a real credential source.
+The default S13 fixture places one synthetic operational clue on `pool-node-02`. Redeploying the pool recreates that fixture. This should be treated as scenario data, not as a real credential source.
 
 ## Telemetry inventory
 
@@ -232,7 +230,7 @@ For most Linux nodes, the deployment helper installs the Wazuh agent and injects
 
 ## Network policy summary
 
-The phase-one firewall allows the minimum baseline dependencies, including:
+The actual phase of implementation of the firewall allows the minimum baseline dependencies, including:
 
 - Every lab subnet to DNS on `10.10.50.50:53`.
 - `app-dmz-01` to PostgreSQL on `5432` and to Squid on `3128`.
@@ -266,12 +264,5 @@ Do not add a broad allow rule to make a new service work. Add the narrow flow, d
 | Windows endpoint | `scripts/windows/` | `validate_win_endpoint.ps1` |
 
 ## Changing defaults safely
-
-1. Change the repository source that owns the value.
-2. Search for scenario inputs or validators that depend on the old value.
-3. Rebuild/redeploy the affected node; do not edit only the running container.
-4. Update this reference.
-5. Run the component validator, full validator, and segmentation validator.
-6. Confirm that the intended source events still reach Wazuh.
 
 Default credentials support reproducibility, not security. If the environment is shared beyond a private host-only lab, replace them and restrict management access before use.
