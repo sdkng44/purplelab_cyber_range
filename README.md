@@ -1,100 +1,115 @@
 # PurpleLab Cyber Range
 
-PurpleLab Cyber Range is a reproducible cyber range for adversary emulation, detection validation, and security monitoring exercises. The environment combines a segmented Docker-based enterprise lab, Apache CALDERA for adversary emulation, and Wazuh for telemetry collection and alerting.
+PurpleLab Cyber Range is a reproducible, locally deployable environment for authorized adversary emulation, detection validation, and security-monitoring exercises. It combines a segmented Docker-based enterprise lab, MITRE CALDERA for emulation and orchestration, and Wazuh for centralized telemetry collection and alerting.
+
+> **Responsible use:** PurpleLab is intended only for controlled laboratory environments and systems where the operator has explicit authorization.
+
+![PurpleLab architecture](docs/images/purplelab-architecture.svg)
+
+## Key capabilities
+
+- Reproducible deployment from a small set of host prerequisites.
+- Two-VM hybrid architecture with twelve segmented Linux containers.
+- DMZ, DATA, USER, CORE, and host-only management networks.
+- Representative enterprise services including web, PostgreSQL, DNS, SMB, proxy, LDAP, and printing.
+- MITRE CALDERA integration through the custom `purplelab` plugin.
+- Wazuh agents, service-specific telemetry, local detection rules, and evidence exports.
+- Linux and Windows bootstrap, validation, recovery, and `ensure` workflows.
+- Isolated detection tests and multistage scenarios such as S13.
 
 ## Scope
 
 This repository contains:
 
-- Docker-based lab node definitions
-- Deployment and validation scripts
-- A custom CALDERA plugin (`purplelab`)
-- Scenario runners and scenario inputs
-- Host bootstrap and provisioning automation for `lab-control`
-- Windows endpoint bootstrap scripts
+- Docker Compose definitions for the laboratory nodes and networks.
+- Deployment, provisioning, recovery, and validation scripts.
+- A custom MITRE CALDERA plugin under `overlays/caldera/plugins/purplelab/`.
+- Scenario runners, validation scripts, and non-sensitive scenario inputs.
+- Host bootstrap and provisioning automation for `lab-control`.
+- Windows endpoint bootstrap and validation scripts.
+- Wazuh configuration and PurpleLab detection content.
 
-This repository does **not** vendor CALDERA or Wazuh-docker directly. Those dependencies are cloned automatically during provisioning.
+The repository does **not** vendor MITRE CALDERA or Wazuh Docker. Pinned upstream revisions are cloned automatically during provisioning, and the PurpleLab overlay is then applied locally.
 
-## High-level architecture
+## Architecture
 
-The baseline environment includes:
+The baseline contains two virtual machines and twelve Linux containers:
 
-- `lab-control`
-- `app-dmz-01`
-- `db-int-01`
-- `dns-int-01`
-- `files-int-01`
-- `proxy-int-01`
-- `ldap-int-01`
-- `print-int-01`
-- `int-endpoint-01`
-- `user-linux-01`
-- `pool-node-*`
-- `win-endpoint-01`
+| Plane or zone | Nodes and services |
+| --- | --- |
+| Management | `lab-control`, `win-endpoint-01` |
+| DMZ | `app-dmz-01` |
+| DATA | `app-dmz-01` data interface, `db-int-01` |
+| USER | `int-endpoint-01`, `user-linux-01`, `pool-node-01..03` |
+| CORE | `dns-int-01`, `files-int-01`, `proxy-int-01`, `ldap-int-01`, `print-int-01`, node core interfaces |
 
-The environment uses segmented Docker networks to represent DMZ, DATA, USER, and CORE zones.
+Network domains:
+
+| Network | CIDR | Purpose |
+| --- | --- | --- |
+| Host-only management | `192.168.56.0/24` | Researcher access and VM management |
+| `dmz_net` | `10.10.10.0/24` | Application-facing surface |
+| `data_net` | `10.10.30.0/24` | Application backend and database |
+| `user_net` | `10.10.40.0/24` | User endpoints and scalable pool nodes |
+| `core_net` | `10.10.50.0/24` | Internal services and shared backplane |
+
+East-west traffic is deny-by-default. The deployment installs explicit exceptions for required dependencies such as DNS, application-to-database traffic, proxy use, approved internal services, and scenario-specific paths.
 
 ## Repository structure
 
-- `compose/` — Docker Compose definitions
-- `configs/` — container images, entrypoints, and service configuration
-- `scripts/host/` — host provisioning, deployment, validation, and orchestration
-- `scripts/linux/` — Linux-side helper scripts
-- `scripts/windows/` — Windows endpoint bootstrap and validation
-- `scenarios/` — scenario runners, validation scripts, and inputs
-- `overlays/caldera/plugins/purplelab/` — custom CALDERA plugin overlay
+```text
+compose/                         Docker Compose definitions
+configs/                         Images, entrypoints and service configuration
+scripts/host/                    Host provisioning, deployment and validation
+scripts/linux/                   Linux-side helper scripts
+scripts/windows/                 Windows bootstrap and validation
+scenarios/                       Scenario runners, inputs and validators
+overlays/caldera/plugins/purplelab/
+                                 Custom CALDERA plugin overlay
+docs/images/                     Architecture and workflow diagrams
+```
 
 ## Prerequisites
 
 Recommended baseline:
 
-- Ubuntu host for `lab-control`
-- Docker
-- Docker Compose
-- Python 3
-- Git
-- VirtualBox for the Windows endpoint workflow
-- Internet access to clone upstream dependencies
+- Ubuntu host for `lab-control`.
+- Docker and Docker Compose.
+- Python 3 and Git.
+- VirtualBox for the Windows endpoint workflow.
+- Internet access during provisioning to clone pinned upstream dependencies.
 
-## Provisioning flow
+Review the configured host-only addresses before deployment if your environment does not use `192.168.56.0/24`.
 
-### lab-control
+## Provisioning
 
-Run from the repository root host:
+### Linux control VM and container lab
+
+Run from the repository root on `lab-control`:
 
 ```bash
 cd scripts/host
 ./ensure_full_lab.sh --pool-count 3
 ```
 
-The `ensure_full_lab.sh` flow will call the lab-control ensure logic, which provisions dependencies when needed, bootstraps CALDERA and Wazuh, deploys the Linux lab nodes, and validates the environment.
+The ensure workflow checks the current state, provisions missing dependencies, clones the pinned CALDERA and Wazuh Docker revisions, applies the PurpleLab overlay, deploys the Linux nodes, enrolls monitoring agents, and runs validation.
 
 ### Windows endpoint
 
-From the Windows endpoint VM:
+Run from the Windows VM:
 
 ```powershell
 Set-ExecutionPolicy Bypass -Scope Process -Force
 .\ensure_win_endpoint.ps1
 ```
 
-## Dependency setup model
-
-The repository reconstructs third-party dependencies automatically.
-
-The host provisioning flow clones pinned revisions of:
-
-- Apache CALDERA
-- Wazuh Docker
-
-It then applies the `purplelab` overlay into CALDERA and enables the plugin in the generated `local.yml`.
+![PurpleLab provisioning flow](docs/images/purplelab-provisioning-flow.svg)
 
 ## Validation
 
-Primary validation commands:
+Run the primary Linux-side validators from `scripts/host/`:
 
 ```bash
-cd scripts/host
 ./validate_lab_control.sh
 ./validate_full_lab.sh
 ```
@@ -105,16 +120,36 @@ On Windows:
 .\validate_win_endpoint.ps1
 ```
 
-## Scenarios
+A deployment should not be treated as ready only because its containers are running. The validators check services, node identities, addressing, agent enrollment, telemetry inputs, and expected network policy.
 
-Scenario content is located under `scenarios/`. Scenario execution outputs are intentionally excluded from version control. The repository currently includes baseline scenario runners and inputs. Some advanced chains, including S13, are under active refinement.
+## Scenarios and detection evidence
 
-## Notes
+Scenario material is located under `scenarios/`. Runtime outputs and local evidence are intentionally excluded from version control. Baseline scenario runners and inputs are included, while advanced chains such as S13 may continue to evolve as detection coverage is refined.
 
-- This repository excludes runtime artifacts, generated files, local evidence, and third-party repository state.
-- CALDERA and Wazuh runtime data are created during provisioning.
-- Review and adapt any hard-coded IP addresses if your host-only network differs from `192.168.56.0/24`.
+PurpleLab separates scenario execution from detection outcomes. For each expected behavior, evidence is checked across source-event generation, Wazuh ingestion, alert generation, tuning, and replay.
+
+![PurpleLab observability flow](docs/images/purplelab-observability-flow.svg)
+
+## Generated and excluded content
+
+The following are created locally and should normally remain outside version control:
+
+- CALDERA and Wazuh runtime data.
+- Generated credentials and local secrets.
+- Scenario execution outputs and evidence exports.
+- Third-party repository working trees.
+- Container volumes, caches, logs, and temporary files.
+
+## Upstream dependencies
+
+MITRE CALDERA and Wazuh Docker remain separate upstream projects and retain their respective licenses. PurpleLab applies its own configuration, automation, scenarios, and plugin overlay after the pinned revisions are cloned.
+
+Consider maintaining a `THIRD_PARTY_NOTICES.md` file with the pinned revision and license of every reconstructed dependency.
+
+## Research artifact
+
+This repository accompanies the manuscript *A Reproducible Purple Team Laboratory for Validating Detections Across Heterogeneous Attack Surfaces*. Formal author and citation metadata can be added to `CITATION.cff` after the anonymous review stage.
 
 ## License
 
-GPL-3.0
+Original PurpleLab code, automation, configurations, and scenarios are distributed under the license in [`LICENSE`](LICENSE). Third-party components and any files explicitly marked otherwise retain their original licenses.
