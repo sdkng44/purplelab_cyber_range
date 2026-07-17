@@ -1,0 +1,163 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1160" viewBox="0 0 1800 1160" role="img" aria-labelledby="title desc">
+  <title id="title">PurpleLab Cyber Range hybrid enterprise architecture</title>
+  <desc id="desc">Two virtual machines and twelve Linux containers distributed across management, DMZ, data, user, and core networks. CALDERA and Wazuh run on lab-control. A highlighted path shows the S13 multistage scenario.</desc>
+  <defs>
+    <marker id="arrow-dark" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M0,0 L12,6 L0,12 z" fill="#334155"/>
+    </marker>
+    <marker id="arrow-teal" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M0,0 L12,6 L0,12 z" fill="#0f766e"/>
+    </marker>
+    <marker id="arrow-purple" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M0,0 L12,6 L0,12 z" fill="#7c3aed"/>
+    </marker>
+    <style>
+      .title { font: 700 34px Arial, Helvetica, sans-serif; fill: #0f172a; }
+      .subtitle { font: 400 18px Arial, Helvetica, sans-serif; fill: #475569; }
+      .plane { font: 700 21px Arial, Helvetica, sans-serif; fill: #0f172a; letter-spacing: .4px; }
+      .zone-title { font: 700 23px Arial, Helvetica, sans-serif; fill: #0f172a; }
+      .zone-net { font: 600 17px Arial, Helvetica, sans-serif; fill: #334155; }
+      .node-title { font: 700 18px Arial, Helvetica, sans-serif; fill: #0f172a; }
+      .node-body { font: 400 15px Arial, Helvetica, sans-serif; fill: #334155; }
+      .small { font: 400 14px Arial, Helvetica, sans-serif; fill: #475569; }
+      .legend { font: 400 15px Arial, Helvetica, sans-serif; fill: #334155; }
+      .panel { stroke: #64748b; stroke-width: 2; rx: 18; }
+      .node { fill: #ffffff; stroke: #64748b; stroke-width: 2; rx: 12; }
+      .control { fill: #eff6ff; stroke: #2563eb; stroke-width: 2.5; rx: 15; }
+      .telemetry { fill: none; stroke: #0f766e; stroke-width: 3; stroke-dasharray: 10 7; marker-end: url(#arrow-teal); }
+      .orchestration { fill: none; stroke: #7c3aed; stroke-width: 3; stroke-dasharray: 4 7; marker-end: url(#arrow-purple); }
+      .dependency { fill: none; stroke: #334155; stroke-width: 3; marker-end: url(#arrow-dark); }
+    </style>
+  </defs>
+
+  <rect width="1800" height="1160" fill="#ffffff"/>
+  <text x="900" y="48" text-anchor="middle" class="title">PurpleLab Cyber Range — Hybrid Enterprise Topology</text>
+  <text x="900" y="78" text-anchor="middle" class="subtitle">2 virtual machines · 12 Linux containers · 5 network domains · centralized emulation and detection</text>
+
+  <rect x="45" y="105" width="1710" height="245" class="panel" fill="#f8fafc"/>
+  <text x="75" y="138" class="plane">MANAGEMENT AND SECURITY PLANE — HOST-ONLY 192.168.56.0/24</text>
+
+  <rect x="75" y="170" width="275" height="140" class="node"/>
+  <text x="212" y="206" text-anchor="middle" class="node-title">Researcher workstation</text>
+  <text x="212" y="237" text-anchor="middle" class="node-body">Repository, SSH and browser</text>
+  <text x="212" y="263" text-anchor="middle" class="node-body">Scenario execution and evidence</text>
+  <text x="212" y="289" text-anchor="middle" class="small">Management access</text>
+
+  <rect x="430" y="155" width="850" height="175" class="control"/>
+  <text x="855" y="190" text-anchor="middle" class="zone-title">lab-control · Ubuntu VM · 192.168.56.10</text>
+  <rect x="460" y="212" width="235" height="90" class="node"/>
+  <text x="577" y="242" text-anchor="middle" class="node-title">MITRE CALDERA</text>
+  <text x="577" y="269" text-anchor="middle" class="node-body">PurpleLab plugin</text>
+  <text x="577" y="291" text-anchor="middle" class="small">Authorized emulation</text>
+  <rect x="738" y="212" width="235" height="90" class="node"/>
+  <text x="855" y="242" text-anchor="middle" class="node-title">Wazuh stack</text>
+  <text x="855" y="269" text-anchor="middle" class="node-body">Manager · Indexer · Dashboard</text>
+  <text x="855" y="291" text-anchor="middle" class="small">Rules and evidence</text>
+  <rect x="1015" y="212" width="235" height="90" class="node"/>
+  <text x="1132" y="242" text-anchor="middle" class="node-title">Docker and automation</text>
+  <text x="1132" y="269" text-anchor="middle" class="node-body">Routing · filtering · ensure</text>
+  <text x="1132" y="291" text-anchor="middle" class="small">Zone gateways</text>
+
+  <rect x="1360" y="170" width="325" height="140" class="node" fill="#fff1f2"/>
+  <text x="1522" y="206" text-anchor="middle" class="node-title">win-endpoint-01</text>
+  <text x="1522" y="234" text-anchor="middle" class="node-body">Windows Server VM · 192.168.56.20</text>
+  <text x="1522" y="261" text-anchor="middle" class="node-body">Native Windows telemetry</text>
+  <text x="1522" y="288" text-anchor="middle" class="small">PowerShell bootstrap and validation</text>
+
+  <path d="M350 240 L430 240" class="dependency"/>
+  <path d="M1280 240 L1360 240" class="dependency"/>
+
+  <!-- Cross-plane lines are drawn before the zone panels so node cards remain readable. -->
+  <path d="M855 302 C855 365, 235 355, 235 450" class="telemetry"/>
+  <path d="M855 302 C855 365, 660 355, 660 450" class="telemetry"/>
+  <path d="M855 302 C855 365, 1090 355, 1090 450" class="telemetry"/>
+  <path d="M855 302 C855 365, 1515 355, 1515 450" class="telemetry"/>
+  <path d="M577 302 C577 390, 270 385, 270 520" class="orchestration"/>
+  <path d="M577 302 C577 395, 1050 380, 1050 602" class="orchestration"/>
+
+  <rect x="610" y="360" width="580" height="48" rx="16" fill="#ffffff" opacity="0.96"/>
+  <text x="900" y="392" text-anchor="middle" class="plane">SEGMENTED DOCKER WORKLOAD PLANE</text>
+
+  <rect x="45" y="420" width="380" height="510" class="panel" fill="#fff7d6" stroke="#d97706"/>
+  <text x="235" y="460" text-anchor="middle" class="zone-title">DMZ</text>
+  <text x="235" y="488" text-anchor="middle" class="zone-net">dmz_net · 10.10.10.0/24 · gateway .1</text>
+  <rect x="80" y="525" width="310" height="185" class="node"/>
+  <text x="235" y="558" text-anchor="middle" class="node-title">app-dmz-01</text>
+  <text x="235" y="587" text-anchor="middle" class="node-body">10.10.10.20 · DMZ interface</text>
+  <text x="235" y="613" text-anchor="middle" class="node-body">10.10.30.20 · data interface</text>
+  <text x="235" y="639" text-anchor="middle" class="node-body">10.10.50.20 · core interface</text>
+  <line x1="105" y1="658" x2="365" y2="658" stroke="#cbd5e1"/>
+  <text x="235" y="683" text-anchor="middle" class="small">Corporate web application</text>
+  <text x="235" y="703" text-anchor="middle" class="small">Web, authentication and JSON logs</text>
+  <rect x="80" y="750" width="310" height="125" class="node" fill="#fffbeb"/>
+  <text x="235" y="783" text-anchor="middle" class="node-title">Exposed services</text>
+  <text x="235" y="812" text-anchor="middle" class="node-body">Application · login · search</text>
+  <text x="235" y="840" text-anchor="middle" class="small">Controlled scenario surface</text>
+
+  <rect x="470" y="420" width="380" height="510" class="panel" fill="#fff1f2" stroke="#e11d48"/>
+  <text x="660" y="460" text-anchor="middle" class="zone-title">DATA</text>
+  <text x="660" y="488" text-anchor="middle" class="zone-net">data_net · 10.10.30.0/24 · gateway .1</text>
+  <rect x="505" y="525" width="310" height="150" class="node"/>
+  <text x="660" y="558" text-anchor="middle" class="node-title">db-int-01</text>
+  <text x="660" y="588" text-anchor="middle" class="node-body">10.10.30.30 · data interface</text>
+  <text x="660" y="614" text-anchor="middle" class="node-body">10.10.50.30 · core interface</text>
+  <text x="660" y="645" text-anchor="middle" class="small">PostgreSQL authentication and queries</text>
+  <rect x="505" y="715" width="310" height="160" class="node" fill="#fff7f8"/>
+  <text x="660" y="748" text-anchor="middle" class="node-title">Application data path</text>
+  <text x="660" y="778" text-anchor="middle" class="node-body">app-dmz-01 → db-int-01</text>
+  <text x="660" y="806" text-anchor="middle" class="node-body">Explicitly allowed dependency</text>
+  <text x="660" y="836" text-anchor="middle" class="small">Database telemetry collected by Wazuh</text>
+
+  <rect x="895" y="420" width="430" height="510" class="panel" fill="#ecfdf5" stroke="#059669"/>
+  <text x="1110" y="460" text-anchor="middle" class="zone-title">USER</text>
+  <text x="1110" y="488" text-anchor="middle" class="zone-net">user_net · 10.10.40.0/24 · gateway .1</text>
+  <rect x="930" y="525" width="360" height="110" class="node"/>
+  <text x="1110" y="557" text-anchor="middle" class="node-title">int-endpoint-01</text>
+  <text x="1110" y="585" text-anchor="middle" class="node-body">10.10.40.10 · 10.10.50.10</text>
+  <text x="1110" y="612" text-anchor="middle" class="small">Internal Linux endpoint</text>
+  <rect x="930" y="655" width="360" height="110" class="node"/>
+  <text x="1110" y="687" text-anchor="middle" class="node-title">user-linux-01</text>
+  <text x="1110" y="715" text-anchor="middle" class="node-body">10.10.40.40 · 10.10.50.40</text>
+  <text x="1110" y="742" text-anchor="middle" class="small">Linux user endpoint</text>
+  <rect x="930" y="785" width="360" height="110" class="node"/>
+  <text x="1110" y="817" text-anchor="middle" class="node-title">pool-node-01..03</text>
+  <text x="1110" y="845" text-anchor="middle" class="node-body">10.10.40.101..103 · 10.10.50.101..103</text>
+  <text x="1110" y="872" text-anchor="middle" class="small">Scalable scenario targets</text>
+
+  <rect x="1370" y="420" width="385" height="510" class="panel" fill="#f5f3ff" stroke="#7c3aed"/>
+  <text x="1562" y="460" text-anchor="middle" class="zone-title">CORE SERVICES</text>
+  <text x="1562" y="488" text-anchor="middle" class="zone-net">core_net · 10.10.50.0/24 · gateway .1</text>
+  <rect x="1405" y="520" width="315" height="67" class="node"/>
+  <text x="1562" y="548" text-anchor="middle" class="node-title">dns-int-01 · 10.10.50.50</text>
+  <text x="1562" y="572" text-anchor="middle" class="small">Corporate DNS</text>
+  <rect x="1405" y="600" width="315" height="67" class="node"/>
+  <text x="1562" y="628" text-anchor="middle" class="node-title">files-int-01 · 10.10.50.60</text>
+  <text x="1562" y="652" text-anchor="middle" class="small">SMB files and synthetic artifacts</text>
+  <rect x="1405" y="680" width="315" height="67" class="node"/>
+  <text x="1562" y="708" text-anchor="middle" class="node-title">proxy-int-01 · 10.10.50.70</text>
+  <text x="1562" y="732" text-anchor="middle" class="small">Squid proxy</text>
+  <rect x="1405" y="760" width="315" height="67" class="node"/>
+  <text x="1562" y="788" text-anchor="middle" class="node-title">ldap-int-01 · 10.10.50.80</text>
+  <text x="1562" y="812" text-anchor="middle" class="small">OpenLDAP directory</text>
+  <rect x="1405" y="840" width="315" height="67" class="node"/>
+  <text x="1562" y="868" text-anchor="middle" class="node-title">print-int-01 · 10.10.50.90</text>
+  <text x="1562" y="892" text-anchor="middle" class="small">CUPS print service</text>
+
+  <path d="M390 610 C440 610, 455 590, 505 590" class="dependency"/>
+  <text x="448" y="575" text-anchor="middle" class="small">DB 5432</text>
+  <path d="M1290 840 C1340 840, 1350 800, 1405 800" class="dependency"/>
+  <text x="1347" y="824" text-anchor="middle" class="small">approved services</text>
+
+  <rect x="45" y="965" width="1710" height="135" rx="18" fill="#f8fafc" stroke="#64748b" stroke-width="2"/>
+  <text x="75" y="1000" class="plane">S13 CONTROLLED MULTISTAGE PATH</text>
+  <text x="900" y="1045" text-anchor="middle" class="zone-title">lab-control → app-dmz-01 → pool-node-01..03 → user-linux-01</text>
+  <text x="900" y="1078" text-anchor="middle" class="subtitle">Discovery · controlled application interaction · agent delivery · local collection · final pivot validation</text>
+
+  <line x1="75" y1="1130" x2="125" y2="1130" stroke="#0f766e" stroke-width="3" stroke-dasharray="10 7"/>
+  <text x="138" y="1135" class="legend">Wazuh telemetry</text>
+  <line x1="345" y1="1130" x2="395" y2="1130" stroke="#7c3aed" stroke-width="3" stroke-dasharray="4 7"/>
+  <text x="408" y="1135" class="legend">CALDERA orchestration</text>
+  <line x1="665" y1="1130" x2="715" y2="1130" stroke="#334155" stroke-width="3"/>
+  <text x="728" y="1135" class="legend">Explicitly allowed dependency</text>
+  <text x="1725" y="1135" text-anchor="end" class="small">Default-deny east-west policy</text>
+</svg>

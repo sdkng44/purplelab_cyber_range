@@ -1,0 +1,106 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1700" height="920" viewBox="0 0 1700 920" role="img" aria-labelledby="title desc">
+  <title id="title">PurpleLab reproducible provisioning and validation flow</title>
+  <desc id="desc">The repository and prerequisites feed host provisioning. Pinned CALDERA and Wazuh dependencies are cloned, the PurpleLab overlay is applied, Linux and Windows nodes are deployed, and validators determine whether the lab is ready.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M0,0 L12,6 L0,12 z" fill="#334155"/>
+    </marker>
+    <style>
+      .title { font: 700 34px Arial, Helvetica, sans-serif; fill: #0f172a; }
+      .subtitle { font: 400 18px Arial, Helvetica, sans-serif; fill: #475569; }
+      .lane-title { font: 700 21px Arial, Helvetica, sans-serif; fill: #0f172a; }
+      .step { font: 700 19px Arial, Helvetica, sans-serif; fill: #0f172a; }
+      .body { font: 400 15px Arial, Helvetica, sans-serif; fill: #334155; }
+      .small { font: 400 14px Arial, Helvetica, sans-serif; fill: #475569; }
+      .lane { stroke: #cbd5e1; stroke-width: 2; rx: 18; }
+      .box { fill: #ffffff; stroke: #64748b; stroke-width: 2; rx: 13; }
+      .flow { fill: none; stroke: #334155; stroke-width: 3; marker-end: url(#arrow); }
+    </style>
+  </defs>
+  <rect width="1700" height="920" fill="#ffffff"/>
+  <text x="850" y="50" text-anchor="middle" class="title">PurpleLab Reproducible Provisioning Flow</text>
+  <text x="850" y="82" text-anchor="middle" class="subtitle">Pinned dependencies, idempotent ensure scripts and explicit validators reconstruct the evaluated state</text>
+
+  <rect x="40" y="120" width="1620" height="170" class="lane" fill="#f8fafc"/>
+  <text x="70" y="153" class="lane-title">1 · INPUTS AND ENTRY POINT</text>
+  <rect x="80" y="180" width="290" height="80" class="box" fill="#eff6ff"/>
+  <text x="225" y="212" text-anchor="middle" class="step">Git repository</text>
+  <text x="225" y="240" text-anchor="middle" class="body">Compose · scripts · configs · overlays</text>
+  <rect x="440" y="180" width="310" height="80" class="box" fill="#f0fdf4"/>
+  <text x="595" y="212" text-anchor="middle" class="step">Ubuntu prerequisites</text>
+  <text x="595" y="240" text-anchor="middle" class="body">Docker · Compose · Python · Git</text>
+  <rect x="820" y="170" width="380" height="100" class="box" fill="#fefce8"/>
+  <text x="1010" y="205" text-anchor="middle" class="step">ensure_full_lab.sh --pool-count 3</text>
+  <text x="1010" y="234" text-anchor="middle" class="body">Single Linux-side orchestration entry point</text>
+  <text x="1010" y="257" text-anchor="middle" class="small">Safe to rerun after partial deployment</text>
+  <rect x="1270" y="180" width="310" height="80" class="box" fill="#fff1f2"/>
+  <text x="1425" y="212" text-anchor="middle" class="step">Windows prerequisites</text>
+  <text x="1425" y="240" text-anchor="middle" class="body">VM · PowerShell · host-only adapter</text>
+  <path d="M225 260 L225 282 L790 282 L790 235 L820 235" class="flow"/>
+  <path d="M750 220 L820 220" class="flow"/>
+
+  <rect x="40" y="320" width="795" height="360" class="lane" fill="#eff6ff"/>
+  <text x="70" y="355" class="lane-title">2A · CONTROL PLANE</text>
+  <rect x="90" y="390" width="300" height="90" class="box"/>
+  <text x="240" y="423" text-anchor="middle" class="step">ensure_lab_control.sh</text>
+  <text x="240" y="452" text-anchor="middle" class="body">Check before changing state</text>
+  <rect x="485" y="390" width="300" height="90" class="box"/>
+  <text x="635" y="423" text-anchor="middle" class="step">Clone pinned revisions</text>
+  <text x="635" y="452" text-anchor="middle" class="body">CALDERA · Wazuh Docker</text>
+  <rect x="90" y="540" width="300" height="90" class="box"/>
+  <text x="240" y="573" text-anchor="middle" class="step">Apply PurpleLab overlay</text>
+  <text x="240" y="602" text-anchor="middle" class="body">Plugin and generated local.yml</text>
+  <rect x="485" y="540" width="300" height="90" class="box"/>
+  <text x="635" y="573" text-anchor="middle" class="step">Start security services</text>
+  <text x="635" y="602" text-anchor="middle" class="body">CALDERA · Wazuh single-node stack</text>
+  <path d="M390 435 L485 435" class="flow"/>
+  <path d="M635 480 L635 520 L240 520 L240 540" class="flow"/>
+  <path d="M390 585 L485 585" class="flow"/>
+
+  <rect x="865" y="320" width="795" height="360" class="lane" fill="#ecfdf5"/>
+  <text x="895" y="355" class="lane-title">2B · WORKLOAD AND ENDPOINT PLANES</text>
+  <rect x="915" y="390" width="300" height="90" class="box"/>
+  <text x="1065" y="423" text-anchor="middle" class="step">Create segmented networks</text>
+  <text x="1065" y="452" text-anchor="middle" class="body">DMZ · DATA · USER · CORE</text>
+  <rect x="1310" y="390" width="300" height="90" class="box"/>
+  <text x="1460" y="423" text-anchor="middle" class="step">Deploy Linux nodes</text>
+  <text x="1460" y="452" text-anchor="middle" class="body">Build and start 12 containers</text>
+  <rect x="915" y="540" width="300" height="90" class="box"/>
+  <text x="1065" y="573" text-anchor="middle" class="step">Enroll and instrument</text>
+  <text x="1065" y="602" text-anchor="middle" class="body">Wazuh agents and service logs</text>
+  <rect x="1310" y="530" width="300" height="110" class="box" fill="#fff1f2"/>
+  <text x="1460" y="563" text-anchor="middle" class="step">ensure_win_endpoint.ps1</text>
+  <text x="1460" y="592" text-anchor="middle" class="body">Bootstrap native Windows VM</text>
+  <text x="1460" y="617" text-anchor="middle" class="small">Agent, telemetry and validation</text>
+  <path d="M1215 435 L1310 435" class="flow"/>
+  <path d="M1460 480 L1460 505 L1065 505 L1065 540" class="flow"/>
+  <path d="M785 585 L915 585" class="flow"/>
+  <path d="M1425 260 C1425 300, 1635 300, 1635 380 L1635 585 L1610 585" class="flow"/>
+
+  <path d="M1010 270 C1010 305, 240 300, 240 390" class="flow"/>
+  <path d="M1010 270 C1010 305, 1065 305, 1065 390" class="flow"/>
+
+  <rect x="40" y="710" width="1620" height="165" class="lane" fill="#f8fafc"/>
+  <text x="70" y="745" class="lane-title">3 · VALIDATION GATE</text>
+  <rect x="100" y="770" width="330" height="75" class="box"/>
+  <text x="265" y="800" text-anchor="middle" class="step">validate_lab_control.sh</text>
+  <text x="265" y="827" text-anchor="middle" class="small">Services, pinned state and health</text>
+  <rect x="520" y="770" width="330" height="75" class="box"/>
+  <text x="685" y="800" text-anchor="middle" class="step">validate_full_lab.sh</text>
+  <text x="685" y="827" text-anchor="middle" class="small">Nodes, networks, agents and policy</text>
+  <rect x="940" y="770" width="330" height="75" class="box"/>
+  <text x="1105" y="800" text-anchor="middle" class="step">validate_win_endpoint.ps1</text>
+  <text x="1105" y="827" text-anchor="middle" class="small">Native endpoint state and telemetry</text>
+  <rect x="1360" y="760" width="235" height="95" class="box" fill="#dcfce7" stroke="#16a34a"/>
+  <text x="1477" y="795" text-anchor="middle" class="step">LAB READY</text>
+  <text x="1477" y="823" text-anchor="middle" class="body">Run scenarios</text>
+  <text x="1477" y="846" text-anchor="middle" class="small">Collect evidence</text>
+  <path d="M635 630 C635 700, 265 700, 265 770" class="flow"/>
+  <path d="M1065 630 C1065 700, 685 700, 685 770" class="flow"/>
+  <path d="M1460 640 C1460 700, 1105 700, 1105 770" class="flow"/>
+  <path d="M430 807 L520 807" class="flow"/>
+  <path d="M850 807 L940 807" class="flow"/>
+  <path d="M1270 807 L1360 807" class="flow"/>
+
+  <text x="850" y="904" text-anchor="middle" class="small">Runtime artifacts and third-party repository state are generated locally and intentionally excluded from version control.</text>
+</svg>

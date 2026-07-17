@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1700" height="720" viewBox="0 0 1700 720" role="img" aria-labelledby="title desc">
+  <title id="title">PurpleLab adversary emulation and detection evidence flow</title>
+  <desc id="desc">Authorized CALDERA scenarios execute on laboratory nodes. Host and service records are collected by Wazuh agents, processed by the Wazuh manager, stored in the indexer, and reviewed in the dashboard. Evidence determines the verdict and tuning can be replayed.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M0,0 L12,6 L0,12 z" fill="#334155"/>
+    </marker>
+    <marker id="arrow-orange" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M0,0 L12,6 L0,12 z" fill="#c2410c"/>
+    </marker>
+    <style>
+      .title { font: 700 34px Arial, Helvetica, sans-serif; fill: #0f172a; }
+      .subtitle { font: 400 18px Arial, Helvetica, sans-serif; fill: #475569; }
+      .step { font: 700 19px Arial, Helvetica, sans-serif; fill: #0f172a; }
+      .body { font: 400 15px Arial, Helvetica, sans-serif; fill: #334155; }
+      .small { font: 400 14px Arial, Helvetica, sans-serif; fill: #475569; }
+      .box { stroke: #64748b; stroke-width: 2.2; rx: 14; }
+      .flow { fill: none; stroke: #334155; stroke-width: 3; marker-end: url(#arrow); }
+      .loop { fill: none; stroke: #c2410c; stroke-width: 3; stroke-dasharray: 10 7; marker-end: url(#arrow-orange); }
+    </style>
+  </defs>
+  <rect width="1700" height="720" fill="#ffffff"/>
+  <text x="850" y="50" text-anchor="middle" class="title">PurpleLab Emulation, Telemetry and Detection Flow</text>
+  <text x="850" y="82" text-anchor="middle" class="subtitle">Scenario completion, source telemetry and alert generation are evaluated as separate outcomes</text>
+
+  <rect x="45" y="145" width="205" height="155" class="box" fill="#fef3c7"/>
+  <text x="147" y="183" text-anchor="middle" class="step">1 · Scenario runner</text>
+  <text x="147" y="218" text-anchor="middle" class="body">Inputs and expected</text>
+  <text x="147" y="244" text-anchor="middle" class="body">observable behaviors</text>
+  <text x="147" y="278" text-anchor="middle" class="small">Recorded start and run ID</text>
+
+  <rect x="290" y="145" width="205" height="155" class="box" fill="#ede9fe"/>
+  <text x="392" y="183" text-anchor="middle" class="step">2 · CALDERA</text>
+  <text x="392" y="218" text-anchor="middle" class="body">Authorized operation</text>
+  <text x="392" y="244" text-anchor="middle" class="body">and agent orchestration</text>
+  <text x="392" y="278" text-anchor="middle" class="small">PurpleLab plugin</text>
+
+  <rect x="535" y="125" width="250" height="195" class="box" fill="#ecfdf5"/>
+  <text x="660" y="164" text-anchor="middle" class="step">3 · Laboratory nodes</text>
+  <text x="660" y="200" text-anchor="middle" class="body">Linux containers · Windows VM</text>
+  <text x="660" y="228" text-anchor="middle" class="body">Web · PostgreSQL · DNS · SMB</text>
+  <text x="660" y="256" text-anchor="middle" class="body">Proxy · LDAP · print services</text>
+  <line x1="570" y1="276" x2="750" y2="276" stroke="#a7f3d0"/>
+  <text x="660" y="302" text-anchor="middle" class="small">Controlled actions generate evidence</text>
+
+  <rect x="825" y="125" width="235" height="195" class="box" fill="#e0f2fe"/>
+  <text x="942" y="164" text-anchor="middle" class="step">4 · Source records</text>
+  <text x="942" y="200" text-anchor="middle" class="body">auth.log · application JSON</text>
+  <text x="942" y="228" text-anchor="middle" class="body">PostgreSQL · service logs</text>
+  <text x="942" y="256" text-anchor="middle" class="body">Windows event channels</text>
+  <text x="942" y="302" text-anchor="middle" class="small">Ground truth for ingestion checks</text>
+
+  <rect x="1100" y="145" width="205" height="155" class="box" fill="#cffafe"/>
+  <text x="1202" y="183" text-anchor="middle" class="step">5 · Wazuh agents</text>
+  <text x="1202" y="218" text-anchor="middle" class="body">Collection and</text>
+  <text x="1202" y="244" text-anchor="middle" class="body">transport to manager</text>
+  <text x="1202" y="278" text-anchor="middle" class="small">13 monitored endpoints</text>
+
+  <rect x="1345" y="125" width="300" height="195" class="box" fill="#dbeafe"/>
+  <text x="1495" y="164" text-anchor="middle" class="step">6 · Wazuh processing</text>
+  <text x="1495" y="200" text-anchor="middle" class="body">Decoders · native and local rules</text>
+  <text x="1495" y="228" text-anchor="middle" class="body">Correlation · severity · ATT&amp;CK IDs</text>
+  <text x="1495" y="256" text-anchor="middle" class="body">Indexer · Dashboard · exports</text>
+  <text x="1495" y="302" text-anchor="middle" class="small">Searchable event and alert evidence</text>
+
+  <path d="M250 222 L290 222" class="flow"/>
+  <path d="M495 222 L535 222" class="flow"/>
+  <path d="M785 222 L825 222" class="flow"/>
+  <path d="M1060 222 L1100 222" class="flow"/>
+  <path d="M1305 222 L1345 222" class="flow"/>
+
+  <rect x="160" y="410" width="1380" height="205" rx="18" fill="#f8fafc" stroke="#64748b" stroke-width="2"/>
+  <text x="850" y="450" text-anchor="middle" class="step">EVIDENCE-BASED VERDICT PER EXPECTED BEHAVIOR</text>
+  <rect x="215" y="485" width="210" height="75" class="box" fill="#dcfce7" stroke="#16a34a"/>
+  <text x="320" y="516" text-anchor="middle" class="step">Detected</text>
+  <text x="320" y="543" text-anchor="middle" class="small">Expected alert exists</text>
+  <rect x="475" y="485" width="210" height="75" class="box" fill="#fef3c7" stroke="#d97706"/>
+  <text x="580" y="516" text-anchor="middle" class="step">Logged only</text>
+  <text x="580" y="543" text-anchor="middle" class="small">Ingested without alert</text>
+  <rect x="735" y="485" width="210" height="75" class="box" fill="#fee2e2" stroke="#dc2626"/>
+  <text x="840" y="516" text-anchor="middle" class="step">Not ingested</text>
+  <text x="840" y="543" text-anchor="middle" class="small">Source exists, SIEM absent</text>
+  <rect x="995" y="485" width="210" height="75" class="box" fill="#f1f5f9"/>
+  <text x="1100" y="516" text-anchor="middle" class="step">Not generated</text>
+  <text x="1100" y="543" text-anchor="middle" class="small">Expected source absent</text>
+  <rect x="1255" y="485" width="210" height="75" class="box" fill="#f1f5f9"/>
+  <text x="1360" y="516" text-anchor="middle" class="step">Execution failed</text>
+  <text x="1360" y="543" text-anchor="middle" class="small">Behavior did not complete</text>
+
+  <path d="M1495 320 C1495 370, 1450 385, 1360 410" class="flow"/>
+  <path d="M580 615 C580 680, 1495 680, 1495 320" class="loop"/>
+  <text x="1040" y="671" text-anchor="middle" class="body">Tune telemetry, decoder, rule or correlation → restore baseline → replay</text>
+  <text x="850" y="705" text-anchor="middle" class="small">An operation marked complete by CALDERA is not automatically classified as detected.</text>
+</svg>
