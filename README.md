@@ -142,8 +142,6 @@ The following are created locally and should normally remain outside version con
 
 MITRE CALDERA and Wazuh Docker remain separate upstream projects and retain their respective licenses. PurpleLab applies its own configuration, automation, scenarios, and plugin overlay after the pinned revisions are cloned.
 
-Consider maintaining a `THIRD_PARTY_NOTICES.md` file with the pinned revision and license of every reconstructed dependency.
-
 ## Research artifact
 
 This repository accompanies the manuscript *A Reproducible Purple Team Laboratory for Validating Detections Across Heterogeneous Attack Surfaces*.
