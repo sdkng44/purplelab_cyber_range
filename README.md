@@ -40,6 +40,23 @@ cd scripts/host
 ./validate_full_lab.sh
 ```
 
+Optional integrity verification:
+
+A SHA-256 checksum file is provided together with the OVA for optional download verification.
+Compare the resulting SHA-256 value of the downloaded .ova file with the value stored in the accompanying .sha256 file before importing the OVA. The SHA-256 values of the .ova downloaded file could be generated as the following:
+
+On Linux:
+
+```bash
+cd scripts/host
+sha256sum -c purplelab-lab-control-v1.0.1.ova.sha256
+```
+On Windows:
+
+```powershell
+Get-FileHash .\purplelab-lab-control-v1.0.1.ova -Algorithm SHA256
+```
+
 ## Scope
 
 This repository contains:
