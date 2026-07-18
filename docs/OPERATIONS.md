@@ -1,6 +1,6 @@
 # PurpleLab Operations Guide
 
-This guide explains how to enter, validate, operate, observe, and extend a deployed PurpleLab environment. It is intended only for the isolated, authorized laboratory described in this repository.
+This guide explains how to enter, validate, operate, observe, and extend a deployed PurpleLab environment.
 
 For exact internal addresses, host ports, default laboratory accounts, service configuration, and log paths, see the [node and service reference](NODE_REFERENCE.md).
 
@@ -29,7 +29,7 @@ Most operator actions begin on `lab-control`. The service containers are reached
 5. Change to the repository directory on the VM, then validate the environment:
 
    ```bash
-   cd /path/to/purplelab_cyber_range/scripts/host
+   cd ~/purplelab_test/scripts/host
    ./validate_lab_control.sh
    ./validate_full_lab.sh
    ```
@@ -40,14 +40,14 @@ Most operator actions begin on `lab-control`. The service containers are reached
    ./print_dashboard_access.sh
    ```
 
-The repository assumes a host user named `labuser`, but it does not create or reset that Ubuntu account. The current OVA uses `labpassword` as its initial laboratory password. Change it after first login if the VM will be shared or connected beyond the private host-only network, and never reuse a personal or institutional password.
+The repository assumes a host user named `labuser`, the current OVA uses `labpassword` as its initial laboratory password. Change it after first login if the VM will be connected beyond the private host-only network.
 
 ## 3. First access after rebuilding from source
 
 From the repository root on `lab-control`:
 
 ```bash
-cd scripts/host
+cd ~/purplelab_test/scripts/host
 ./ensure_full_lab.sh --pool-count 3
 ```
 
@@ -104,7 +104,6 @@ docker compose ps
 - URL: `https://192.168.56.10`
 - User: `admin`
 - Default laboratory password: `SecretPassword`
-- Expected first-use behavior: the browser reports a self-signed certificate.
 
 Use the Endpoints view to confirm agent presence. Use Discover or the security-events views to filter by `agent.name`, `rule.id`, `rule.mitre.id`, and the scenario time window.
 
@@ -112,7 +111,7 @@ Use the Endpoints view to confirm agent presence. Use Discover or the security-e
 
 - URL: `http://192.168.56.10:8888`
 - User: `red`
-- Password: generated locally during bootstrap.
+- Password: generated locally during bootstrap, stored on local.conf file inside Caldera folder.
 
 Read the generated password from:
 
@@ -120,7 +119,7 @@ Read the generated password from:
 thirdparty/caldera/conf/local.yml
 ```
 
-The helper below prints both dashboard access blocks without placing the generated CALDERA secret in version control:
+The helper below prints both dashboard access blocks:
 
 ```bash
 cd scripts/host
@@ -129,7 +128,7 @@ cd scripts/host
 
 ## 6. Direct access to Linux nodes
 
-All container SSH ports are published on `192.168.56.10`. The main baseline account is `analyst`; its synthetic laboratory password is `Analyst123!`.
+All container SSH ports are published on `192.168.56.10`. The main baseline account is `analyst`; an the password is `Analyst123!`.
 
 Examples:
 
@@ -156,7 +155,7 @@ The following checks provide a safe operational smoke test. Credentials are ente
 
 ### Corporate web application
 
-Open `http://192.168.56.10:8080/`. The synthetic application account is `webanalyst` with password `WebAnalyst123!`.
+Open `http://192.168.56.10:8080/`. The application account is `webanalyst` with password `WebAnalyst123!`.
 
 ### PostgreSQL
 
@@ -164,7 +163,7 @@ Open `http://192.168.56.10:8080/`. The synthetic application account is `webanal
 psql -h 192.168.56.10 -p 15432 -U dbanalyst -d purpledb
 ```
 
-When prompted, use the synthetic database password listed in the [service account table](NODE_REFERENCE.md#service-accounts).
+When prompted, use the database password listed in the [service account table](NODE_REFERENCE.md#service-accounts).
 
 ### DNS
 
@@ -231,7 +230,7 @@ cd scripts/host
 ./deploy_dns_int.sh
 ```
 
-Equivalent helpers exist for the other named nodes. These scripts may recreate a container; preserve any intentional experimental changes outside the container before running them.
+Equivalent helpers exist for the other named nodes. These scripts may recreate a container and delete all of the changes previously applied; preserve any intentional experimental changes outside the container before running them.
 
 ### Stop the laboratory without deleting it
 
@@ -250,22 +249,22 @@ Start it again through `ensure_full_lab.sh` so all dependencies and policies are
 
 ## 9. Scenario workflow
 
-Scenario folders contain inputs, a runner when execution is script-driven, a collector, and a validator. Use them only inside this isolated laboratory.
+Scenario folders contain inputs, a runner when execution is script-driven, a collector, and a validator.
 
 A repeatable experiment follows this sequence:
 
 1. Run the readiness checklist.
 2. Record the start time and the scenario identifier.
 3. Review the scenario's `inputs/` and runner before execution.
-4. Execute the corresponding `run_*` script or approved CALDERA operation.
+4. Create and excecute an Operation in Caldera interface with the selected scenario adversary.
 5. Run the scenario `collect_*` script to gather evidence.
 6. Run the scenario `validate_*` script.
 7. Check Wazuh for source events, ingestion, rule matches, and alert metadata.
-8. Record one mutually exclusive verdict: `Detected`, `Logged only`, `Not ingested`, `Not generated`, or `Execution failed`.
+8. Record one mutually exclusive verdict for the event: `Detected`, `Logged only`, `Not ingested`, `Not generated`, or `Execution failed`.
 
 Tool completion alone is not a detection result. The verdict must be supported by source logs and Wazuh evidence. Some scenarios, including the multistage S13 chain, are expected to expose detection gaps until additional telemetry and correlation rules are implemented.
 
-The custom CALDERA content is under `overlays/caldera/plugins/purplelab/`. Scenario outputs and local evidence are intentionally excluded from Git.
+The custom plugin `purplelab` for CALDERA is under `overlays/caldera/plugins/purplelab/`.
 
 ## 10. Observability and troubleshooting
 
@@ -275,6 +274,8 @@ The custom CALDERA content is under `overlays/caldera/plugins/purplelab/`. Scena
 docker exec app-dmz-01 tail -n 50 /var/ossec/logs/ossec.log
 docker exec db-int-01 tail -n 50 /var/ossec/logs/ossec.log
 ```
+
+Equivalent for the other named nodes.
 
 ### Check service logs at the source
 
@@ -308,31 +309,21 @@ cd scripts/host
 
 After clearing logs, run the validators and generate a fresh baseline before the next experiment.
 
-## 11. Extending the laboratory
+## 11. Customizing the laboratory
 
-Before changing a service, locate its authoritative file in [Configuration ownership](NODE_REFERENCE.md#configuration-ownership).
+Before changing a service, locate its authoritative file in [Configuration of services](NODE_REFERENCE.md#configuration-of-services).
 
 General extension workflow:
 
-1. Modify the repository-managed configuration, not the running container alone.
+1. Modify configuration file on the authoritative repository path, not apply configuration inside the running container alone.
 2. Update or add an idempotent deployment helper.
-3. Add the required Wazuh `localfile` input when a new log source is introduced.
+3. Add the required Wazuh `localfile` input when a new log source is introduced if the events cannot be detected by Wazuh.
 4. Update network policy only for the minimum required flow.
 5. Add a validator for the service and for its expected segmentation.
 6. Rebuild the affected node.
 7. Re-run full validation and document the new node, account, port, log, and scenario dependency.
 
-Avoid embedding real secrets. If a new default credential is required for a synthetic service, label it clearly as laboratory-only and keep the environment isolated.
-
-## 12. Known operational constraints
-
-- The baseline is validated with three pool nodes. `pool-node-01..03` use SSH host ports `2231..2233`; port `2234` is already assigned to `print-int-01`. Increasing the pool above three requires changing the host-port allocation first.
-- The source repository does not create the Ubuntu `labuser` account or set its password; `labpassword` is the current OVA's initial credential, not a provisioning default for arbitrary source-built VMs.
-- Recreating containers discards changes made only inside them.
-- Passing platform validation does not imply that every emulated behavior generates a Wazuh alert.
-- The Windows bootstrap intentionally enables detailed logging and laboratory agent services. Use it only on the dedicated endpoint VM.
-
-## 13. Next references
+## 12. Next references
 
 - [Node and service reference](NODE_REFERENCE.md)
 - [Main README](../README.md)
