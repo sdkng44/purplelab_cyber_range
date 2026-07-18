@@ -259,7 +259,7 @@ Do not add a broad allow rule to make a new service work. Add the narrow flow, d
 | CUPS | `configs/print-int-01/cupsd.conf` and deploy helper | `deploy_print_int.sh`, `validate_print_int.sh` |
 | Wazuh local rules | `configs/wazuh/local_rules.xml` | `apply_wazuh_local_rules.sh` |
 | Linux Wazuh inputs | `scripts/host/deploy_*.sh` | Node validator and Wazuh UI |
-| CALDERA content | `overlays/caldera/plugins/purplelab/` | `enable_caldera_purplelab.sh` and CALDERA UI |
+| purplelab plugin | `overlays/caldera/plugins/purplelab/` | `enable_caldera_purplelab.sh` and CALDERA UI |
 | Pool topology and fixtures | `scripts/host/deploy_pool_nodes.sh` | Full and segmentation validators |
 | Windows endpoint | `scripts/windows/` | `validate_win_endpoint.ps1` |
 
