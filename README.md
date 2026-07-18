@@ -27,7 +27,7 @@ PurpleLab Cyber Range is a reproducible, locally deployable environment for auth
 
 The Git repository remains the primary reproducible artifact and should be treated as the source of truth for rebuilding the laboratory from scratch.
 
-For individuals who prefer importing a prebuilt control-plane image, an optional OVA export of the validated `lab-control` VM is also available as a convenience artifact for individuals who prefer importing a prebuilt image instead of reconstructing the environment from code.
+For individuals who prefer importing a prebuilt image, an optional OVA export of the validated `lab-control` VM is also available as a convenience artifact if you prefer importing a prebuilt image instead of reconstructing the environment from code.
 
 - OVA download: [Mega folder](https://mega.nz/folder/ntEFnTxY#HNxc5cVVn-EBb5vZRcBl9w)
 - Platform: VirtualBox
