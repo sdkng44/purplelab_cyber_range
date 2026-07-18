@@ -245,9 +245,9 @@ Representative blocked flows include internal endpoints to PostgreSQL and the DM
 
 Do not add a broad allow rule to make a new service work. Add the narrow flow, document why it is needed, and add an expected-open or expected-blocked validation.
 
-## Configuration ownership
+## Configuration of services
 
-| Concern | Authoritative repository path | Apply or validate with |
+| Services | Authoritative repository path | Apply or validate with |
 | --- | --- | --- |
 | Static nodes, networks, host ports | `compose/docker-compose.yml` | `scripts/host/ensure_full_lab.sh` |
 | Per-node packages and users | `configs/<node>/Dockerfile` | Corresponding `deploy_<node>.sh` |
