@@ -37,7 +37,7 @@ Recommended use of the OVA:
 
 1. Import the OVA into VirtualBox via "File > Import Appliance".
 2. Start the imported VM with the expected host-only adapter.
-3. Connect via SSH to `lab-control`, for user, password and IP address check: [Operations guide](docs/OPERATIONS.md).
+3. Connect via SSH to `lab-control`. For user, password and IP address check: [Operations guide](docs/OPERATIONS.md).
 4. Verify dashboard access.
 5. Run the Linux-side validators again.
 
