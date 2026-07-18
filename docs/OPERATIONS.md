@@ -42,7 +42,7 @@ Most operator actions begin on `lab-control`. The service containers are reached
 
 The repository assumes a host user named `labuser`, the current OVA uses `labpassword` as its initial laboratory password. Change it after first login if the VM will be connected beyond the private host-only network.
 
-## 3. First access after rebuilding from source
+## 3. First access after rebuilding from source (without OVA)
 
 From the repository root on `lab-control`:
 
