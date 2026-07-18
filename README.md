@@ -17,10 +17,10 @@ PurpleLab Cyber Range is a reproducible, locally deployable environment for auth
 
 ## Start here
 
-- Rebuild the laboratory from source: [Provisioning without OVA](#provisioning-without-ova).
-- Import the prebuilt control plane: [Optional OVA distribution](#quick-access-optional-ova-distribution).
+- Quick import of the prebuilt OVA: [Optional OVA distribution](#quick-access-optional-ova-distribution).
 - Start, stop, access, validate, and use the environment: [Operations guide](docs/OPERATIONS.md).
 - Look up node addresses, ports, accounts, services, logs, and configuration files: [Node and service reference](docs/NODE_REFERENCE.md).
+- Rebuild the laboratory from source: [Provisioning without OVA](#provisioning-without-ova).
 
 
 ## Quick access: optional OVA distribution
