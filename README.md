@@ -31,7 +31,7 @@ For individuals who prefer importing a prebuilt image, an optional OVA export of
 
 - OVA download: [Mega folder](https://mega.nz/folder/ntEFnTxY#HNxc5cVVn-EBb5vZRcBl9w)
 - Platform: VirtualBox
-- Purpose: convenience artifact for faster evaluation of the validated baseline
+- Purpose: convenience artifact for faster deployment of the environment
 
 Recommended use of the OVA:
 
