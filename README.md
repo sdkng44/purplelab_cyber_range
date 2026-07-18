@@ -35,7 +35,7 @@ For individuals who prefer importing a prebuilt image, an optional OVA export of
 
 Recommended use of the OVA:
 
-1. Import the OVA into VirtualBox.
+1. Import the OVA into VirtualBox via "File > Import Appliance".
 2. Start the imported VM with the expected host-only adapter.
 3. Verify dashboard access.
 4. Run the Linux-side validators again.
