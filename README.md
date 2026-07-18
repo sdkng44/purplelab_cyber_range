@@ -130,6 +130,8 @@ Review the configured host-only addresses before deployment if your environment 
 
 ## Provisioning without OVA
 
+![PurpleLab provisioning flow](docs/images/purplelab-provisioning-flow.svg)
+
 ### Linux control VM and container lab
 
 Run from the repository root on `lab-control`:
@@ -149,8 +151,6 @@ Run from the Windows VM:
 Set-ExecutionPolicy Bypass -Scope Process -Force
 .\ensure_win_endpoint.ps1
 ```
-
-![PurpleLab provisioning flow](docs/images/purplelab-provisioning-flow.svg)
 
 ## Validation
 
@@ -173,9 +173,9 @@ A deployment should not be treated as ready only because its containers are runn
 
 Scenario material is located under `scenarios/`. Runtime outputs and local evidence are intentionally excluded from version control. Baseline scenario runners and inputs are included, while advanced chains such as S13 may continue to evolve as detection coverage is refined.
 
-PurpleLab separates scenario execution from detection outcomes. For each expected behavior, evidence is checked across source-event generation, Wazuh ingestion, alert generation, tuning, and replay.
-
 ![PurpleLab observability flow](docs/images/purplelab-observability-flow.svg)
+
+PurpleLab separates scenario execution from detection outcomes. For each expected behavior, evidence is checked across source-event generation, Wazuh ingestion, alert generation, tuning, and replay.
 
 ## Generated and excluded content
 
