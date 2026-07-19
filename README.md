@@ -94,7 +94,7 @@ Network domains:
 
 | Network | CIDR | Purpose |
 | --- | --- | --- |
-| Host-only management | `192.168.56.0/24` | Researcher access and VM management |
+| Host-only management | `192.168.56.0/24` | VM management |
 | `dmz_net` | `10.10.10.0/24` | Application-facing surface |
 | `data_net` | `10.10.30.0/24` | Application backend and database |
 | `user_net` | `10.10.40.0/24` | User endpoints and scalable pool nodes |
